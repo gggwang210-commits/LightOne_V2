@@ -30,4 +30,4 @@ class Command(BaseCommand):
         for item in strategies:
             StrategyItem.objects.create(**item)
 
-        self.stdout.write(self.style.SUCCESS('LIGHT ONE premium demo data created.'))
+        self.stdout.write(self.style.SUCCESS('LIGHT ONE business demo data created.'))

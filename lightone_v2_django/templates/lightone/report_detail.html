@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}{{ session.member_name }} Report{% endblock %}
+{% block content %}
+<section class="detail-hero detail-healthcare">
+  <a href="{% url 'lightone:dashboard' %}">← 대시보드로 돌아가기</a>
+  <div class="detail-grid">
+    <div>
+      <span class="eyebrow dark">MEMBER REPORT</span>
+      <h1>{{ session.member_name }} 상담 리포트</h1>
+      <p>{{ session.goal }}</p>
+    </div>
+    <div class="big-number">
+      <span>QS Score</span>
+      <strong>{{ session.qs_score }}</strong>
+      <small>{{ session.route }} · QC {{ session.qc_status }}</small>
+    </div>
+  </div>
+</section>
+<section class="section-block two-col">
+  <div class="panel-card">
+    <h3>상담 요약</h3>
+    <p class="muted">담당 트레이너: {{ session.trainer_name }}</p>
+    <p class="muted">주요 불편감: {{ session.discomfort_area }}</p>
+    <p class="muted">{{ session.memo }}</p>
+  </div>
+  <div class="panel-card">
+    <h3>핵심 지표</h3>
+    <div class="route-grid compact">
+      <div><span>JATC</span><strong>{{ session.jatc_score }}</strong></div>
+      <div><span>FORM</span><strong>{{ session.form_accuracy }}</strong></div>
+      <div><span>RPE</span><strong>{{ session.rpe }}</strong></div>
+    </div>
+  </div>
+</section>
+{% endblock %}

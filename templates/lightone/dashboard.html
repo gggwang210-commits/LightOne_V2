@@ -1,237 +1,296 @@
-{% extends 'base.html' %}
+﻿{% extends 'base.html' %}
 {% load static %}
 
 {% block title %}LIGHT ONE Business Overview{% endblock %}
 
 {% block content %}
+
 <section class="hero-card image-hero">
   <div class="hero-copy">
-    <span class="eyebrow">LIGHT ONE MVP · PT REPORT OS</span>
-
-    <h1>
-      운동 데이터를<br>
-      상담 가능한 리포트로 바꾸는 <em>AI 웹 대시보드</em>
+    <span class="eyebrow">LIGHT ONE MVP · TRAINER REPORT SaaS</span>
+    <h1 class="hero-main-copy">
+      <span class="hero-slogan">??? ??? ??? ??? ????</span>
+      <span class="hero-title-line">AI ?? ???? PT ??? ??? SaaS</span>
     </h1>
-
-    <p>
-      운동 기록, 통증 반응, 촬영 QC, 상담 메모를 하나의 흐름으로 구조화해
-      트레이너가 재등록 상담과 컨디셔닝 안내에 바로 활용할 수 있도록 정리합니다.
-    </p>
-
     <div class="hero-tags">
-      <span>?MVP ?? ??? ??</span>
-      <span>??MVP ?? ??? ?? ??</span>
-      <span>QS / JATC Engine</span>
+      <span>비의료 보조</span>
+      <span>트레이너 최종 판단</span>
+      <span>상담 리포트 자동화</span>
     </div>
   </div>
 
-  <div class="hero-visual" aria-label="LIGHT ONE tablet dashboard preview">
-    <img src="{% static 'lightone/img/dashbord.png' %}" alt="LIGHT ONE dashboard on tablet">
-  </div>
-
-  <div class="score-card">
-    <span>QS 평균 점수</span>
-    <strong>{{ avg_qs }}</strong>
-    <small>AUTO / REVIEW / BLOCK</small>
-    <div class="score-ring"><b></b></div>
+  <div class="hero-visual">
+    <div class="device-frame">
+      <img src="{% static 'lightone/img/dashbord.png' %}" alt="LIGHT ONE dashboard preview">
+    </div>
+    <div class="hero-score-card">
+      <small>Report Readiness</small>
+      <strong>{{ avg_qs|default:"65.3" }}</strong>
+      <span>AUTO / REVIEW / BLOCK</span>
+    </div>
   </div>
 </section>
 
-<section class="section-block asset-summary">
+
+<section class="section-block">
   <div class="section-title">
     <span>00</span>
-    <h2>이미지 소스 분석 반영</h2>
+    <h2>LIGHT ONE 사업 소개</h2>
+    <p>
+      트레이너가 회원 데이터를 흩어진 기록이 아니라, 상담 가능한 리포트로 활용할 수 있도록
+      구조화하는 것이 LIGHT ONE의 핵심입니다.
+    </p>
   </div>
-  <div class="asset-grid">
-    <article class="asset-card wide">
-      <img src="{% static 'lightone/img/base2.png' %}" alt="blue medical background">
+
+  <div class="feature-grid">
+    <article class="feature-card">
+      <img src="{% static 'lightone/img/base2.png' %}" alt="main background">
       <div>
-        <strong>메인 배경</strong>
-        <small>하늘빛·스카이톤 기반의 체형 분석 / 헬스케어 SaaS 무드</small>
+        <strong>상담 리포트 기반</strong>
+        <p>회원 기록을 상담·재등록·운동 방향 조정에 활용 가능한 문서 흐름으로 정리합니다.</p>
       </div>
     </article>
-    <article class="asset-card">
-      <img src="{% static 'lightone/img/one.png' %}" alt="joint analysis visual">
+
+    <article class="feature-card">
+      <img src="{% static 'lightone/img/healthcare_main_gym.png' %}" alt="gym concept">
       <div>
-        <strong>관절 분석</strong>
-        <small>인체 관절·움직임 분석 콘셉트</small>
+        <strong>PT샵 운영 효율화</strong>
+        <p>수기 메모와 분산된 기록을 줄이고, 트레이너가 상담 전에 봐야 할 항목을 요약합니다.</p>
       </div>
     </article>
-    <article class="asset-card">
-      <img src="{% static 'lightone/img/time.png' %}" alt="wearable health dashboard">
+
+    <article class="feature-card">
+      <img src="{% static 'lightone/img/phone_hand_light.png' %}" alt="mobile report">
       <div>
-        <strong>웨어러블 연동</strong>
-        <small>심박·운동시간·컨디션 기록 콘셉트</small>
+        <strong>운동·컨디션 흐름</strong>
+        <p>운동 기록, 컨디션 반응, 통증 메모를 연결해 회원 관리의 맥락을 제공합니다.</p>
       </div>
     </article>
-    <article class="asset-card">
-      <img src="{% static 'lightone/img/hartbeat.png' %}" alt="heartbeat signal">
+
+    <article class="feature-card">
+      <img src="{% static 'lightone/img/heartbeat.png' %}" alt="signal concept">
       <div>
-        <strong>바이탈 신호</strong>
-        <small>건강 데이터 흐름을 보조 그래픽으로 사용</small>
+        <strong>비의료 보조 구조</strong>
+        <p>진단이 아니라 상담 준비를 돕는 리포트 초안이며, 최종 판단은 트레이너가 수행합니다.</p>
       </div>
     </article>
   </div>
 </section>
+
 
 <section id="progress" class="section-block">
   <div class="section-title">
     <span>01</span>
-    <h2>진행 현황</h2>
-  </div>
-
-  <div class="metric-grid">
-    <article class="metric-card">
-      <span>전체 세션</span>
-      <strong>{{ total }}</strong>
-      <small>관찰 중인 데이터</small>
-    </article>
-
-    <article class="metric-card accent-green">
-      <span>AUTO</span>
-      <strong>{{ counts.AUTO }}</strong>
-      <small>자동 리포트 가능</small>
-    </article>
-
-    <article class="metric-card accent-yellow">
-      <span>REVIEW</span>
-      <strong>{{ counts.REVIEW }}</strong>
-      <small>트레이너 검토</small>
-    </article>
-
-    <article class="metric-card accent-red">
-      <span>BLOCK</span>
-      <strong>{{ counts.BLOCK }}</strong>
-      <small>운동 중단 권고</small>
-    </article>
-  </div>
-
-  <div class="notice">
-    <b>ⓘ Safety Boundary</b>
-    이 화면은 진단·치료 목적이 아니라 PT 상담과 웰니스 피드백을 위한 프로토타입입니다.
-  </div>
-</section>
-
-<section id="analysis" class="section-block two-col">
-  <div class="panel-card feature-panel">
-    <div class="panel-head">
-      <h3>Feature Importance Top 6</h3>
-      <small>상담 판단 보조 지표</small>
-    </div>
-
-    {% for item in feature_importance %}
-    <div class="bar-row">
-      <span>{{ item.name }}</span>
-      <div>
-        <i style="width: {% widthratio item.value 1 100 %}%"></i>
-      </div>
-      <b>{{ item.value }}</b>
-    </div>
-    {% endfor %}
-  </div>
-
-  <div class="panel-card visual-route-panel">
-    <div class="panel-head">
-      <h3>위험 라우팅</h3>
-      <small>Human review gate</small>
-    </div>
-
-    <div class="route-grid">
-      <div>
-        <span>AUTO</span>
-        <strong class="green">{{ counts.AUTO }}</strong>
-        <small>자동 리포트</small>
-      </div>
-
-      <div>
-        <span>REVIEW</span>
-        <strong class="yellow">{{ counts.REVIEW }}</strong>
-        <small>트레이너 확인</small>
-      </div>
-
-      <div>
-        <span>BLOCK</span>
-        <strong class="red">{{ counts.BLOCK }}</strong>
-        <small>운동 중단 안내</small>
-      </div>
-    </div>
-
-    <p class="muted">
-      통증 반응이 높거나 촬영 QC가 낮으면 REVIEW/BLOCK으로 분류하여
-      트레이너 확인 흐름으로 넘깁니다. AI는 최종 판단자가 아니라 상담 보조 레이어입니다.
+    <h2>MVP 적용 흐름</h2>
+    <p>
+      현재 MVP는 회원별 샘플 데이터를 기반으로 상담 우선순위와 리포트 검토 상태를 보여줍니다.
     </p>
   </div>
+
+  <div class="kpi-grid">
+    <article class="kpi-card">
+      <span>전체 세션</span>
+      <strong>{{ total|default:"0" }}</strong>
+      <p>등록된 회원 상담 데이터</p>
+    </article>
+
+    <article class="kpi-card positive">
+      <span>AUTO</span>
+      <strong>{{ counts.AUTO|default:"0" }}</strong>
+      <p>자동 리포트 가능</p>
+    </article>
+
+    <article class="kpi-card warning">
+      <span>REVIEW</span>
+      <strong>{{ counts.REVIEW|default:"0" }}</strong>
+      <p>트레이너 검토 필요</p>
+    </article>
+
+    <article class="kpi-card danger">
+      <span>BLOCK</span>
+      <strong>{{ counts.BLOCK|default:"0" }}</strong>
+      <p>상담 전 확인 필요</p>
+    </article>
+  </div>
 </section>
+
+
+<section id="analysis" class="section-block two-col">
+  <div>
+    <div class="section-title compact">
+      <span>02</span>
+      <h2>리포트 판단 구조</h2>
+    </div>
+
+    <div class="insight-card dark-card">
+      <strong>QS 평균 점수</strong>
+      <em>{{ avg_qs|default:"0" }}</em>
+      <p>
+        회원 기록의 상담 준비도를 요약한 샘플 지표입니다.
+        실제 서비스에서는 입력 데이터와 트레이너 기준에 따라 조정될 수 있습니다.
+      </p>
+    </div>
+
+    <div class="insight-card">
+      <strong>JATC 평균 점수</strong>
+      <em>{{ avg_jatc|default:"0" }}</em>
+      <p>
+        운동 기록, 체형 관찰, 통증 반응, 상담 메모의 연결성을 검토하는 예시 지표입니다.
+      </p>
+    </div>
+  </div>
+
+  <div class="panel-card">
+    <h3>검토 상태</h3>
+
+    <div class="status-list">
+      <div>
+        <span>PASS</span>
+        <strong>{{ qc_counts.PASS|default:"0" }}</strong>
+        <p>상담 리포트로 바로 활용 가능</p>
+      </div>
+
+      <div>
+        <span>CHECK</span>
+        <strong>{{ qc_counts.CHECK|default:"0" }}</strong>
+        <p>트레이너 확인 후 활용 권장</p>
+      </div>
+
+      <div>
+        <span>FAIL</span>
+        <strong>{{ qc_counts.FAIL|default:"0" }}</strong>
+        <p>상담 전 데이터 보완 필요</p>
+      </div>
+    </div>
+
+    <div class="notice compact-notice">
+      본 지표는 의료 판단이 아니라 PT 상담 준비를 위한 비의료 보조 정보입니다.
+    </div>
+  </div>
+</section>
+
 
 <section id="reports" class="section-block">
   <div class="section-title">
     <span>03</span>
-    <h2>AI 상담 리포트 미리보기</h2>
+    <h2>샘플 상담 리포트</h2>
+    <p>
+      회원별 리포트는 트레이너가 상담 전에 빠르게 확인해야 할 목표, 불편 부위, 점수, 상태, 메모를 정리합니다.
+    </p>
   </div>
 
   <div class="report-grid">
-    {% for s in sessions %}
-    <a class="report-card route-{{ s.route|lower }}" href="{% url 'lightone:report_detail' s.pk %}">
-      <div class="report-top">
-        <strong>{{ s.member_name }}</strong>
-        <span>{{ s.route }}</span>
+    {% for session in sessions %}
+    <article class="report-card">
+      <div class="report-head">
+        <div>
+          <span>{{ session.route }}</span>
+          <h3>{{ session.member_name }}</h3>
+        </div>
+        <strong class="qc-badge">{{ session.qc_status }}</strong>
       </div>
 
-      <p>{{ s.goal }}</p>
+      <p class="report-goal">{{ session.goal }}</p>
 
-      <div class="report-kpis">
-        <b>QS {{ s.qs_score }}</b>
-        <b>JATC {{ s.jatc_score }}</b>
-        <b>QC {{ s.qc_status }}</b>
-      </div>
-    </a>
-    {% endfor %}
-  </div>
-</section>
+      <dl>
+        <div>
+          <dt>불편 부위</dt>
+          <dd>{{ session.discomfort_area }}</dd>
+        </div>
+        <div>
+          <dt>QS</dt>
+          <dd>{{ session.qs_score }}</dd>
+        </div>
+        <div>
+          <dt>JATC</dt>
+          <dd>{{ session.jatc_score }}</dd>
+        </div>
+      </dl>
 
-<section id="priority" class="section-block">
-  <div class="section-title">
-    <span>04</span>
-    <h2>사업 우선순위</h2>
-  </div>
+      <p class="report-memo">{{ session.memo }}</p>
 
-  <div class="strategy-list">
-    {% for item in strategy_items %}
-    <article>
-      <div>
-        <strong>{{ item.title }}</strong>
-        <small>{{ item.category }} · {{ item.priority }} · {{ item.status }}</small>
-      </div>
-      <p>{{ item.output }}</p>
+      <a href="{% url 'lightone:report_detail' session.pk %}" class="card-link">
+        리포트 상세 보기 →
+      </a>
+    </article>
+    {% empty %}
+    <article class="report-card">
+      <h3>샘플 데이터가 없습니다</h3>
+      <p>터미널에서 python manage.py seed_lightone 명령을 실행해 주세요.</p>
     </article>
     {% endfor %}
   </div>
 </section>
 
+
+<section id="priority" class="section-block">
+  <div class="section-title">
+    <span>04</span>
+    <h2>실행 우선순위</h2>
+    <p>
+      LIGHT ONE MVP를 실제 파일럿 서비스로 확장하기 위해 필요한 우선 작업입니다.
+    </p>
+  </div>
+
+  <div class="priority-grid">
+    {% for item in strategies %}
+    <article class="priority-card">
+      <span>{{ forloop.counter|stringformat:"02d" }}</span>
+      <h3>{{ item.title }}</h3>
+      <p>{{ item.description }}</p>
+    </article>
+    {% empty %}
+    <article class="priority-card">
+      <span>01</span>
+      <h3>MVP 데이터 구조 정리</h3>
+      <p>상담 리포트 생성을 위한 입력 항목과 출력 항목을 고정합니다.</p>
+    </article>
+    <article class="priority-card">
+      <span>02</span>
+      <h3>파일럿 고객 검증</h3>
+      <p>PT샵 1곳 이상에서 실제 상담 흐름에 맞는지 검증합니다.</p>
+    </article>
+    <article class="priority-card">
+      <span>03</span>
+      <h3>리포트 자동화 고도화</h3>
+      <p>트레이너가 바로 활용할 수 있는 문장형 리포트로 개선합니다.</p>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+
+
 <section id="roadmap" class="section-block roadmap-card">
   <div class="section-title">
     <span>05</span>
-    <h2>로드맵 진행률</h2>
+    <h2>사업 로드맵</h2>
   </div>
 
   <div class="roadmap-grid">
     <div>
       <b>01</b>
-      <strong>상담 리포트 MVP</strong>
-      <span>회원 기록 · QS · 라우팅</span>
+      <strong>MVP 화면 고도화</strong>
+      <span>사업 소개, 서비스 구조, 샘플 리포트 화면을 정리합니다.</span>
     </div>
 
     <div>
       <b>02</b>
-      <strong>센터 파일럿</strong>
-      <span>PT샵 1~2곳 업무 흐름 검증</span>
+      <strong>입력폼 및 리포트 생성</strong>
+      <span>회원 입력폼과 상담 리포트 자동 생성 흐름을 연결합니다.</span>
     </div>
 
     <div>
       <b>03</b>
-      <strong>교육·인증 IP</strong>
-      <span>트레이너 컨디셔닝 프로토콜</span>
+      <strong>PT샵 파일럿 검증</strong>
+      <span>실제 상담 현장에서 필요한 항목과 문구를 검증합니다.</span>
+    </div>
+
+    <div>
+      <b>04</b>
+      <strong>SaaS 사업화 준비</strong>
+      <span>가격 정책, 관리자 기능, 고객 관리 기능을 확장합니다.</span>
     </div>
   </div>
 </section>
+
 {% endblock %}

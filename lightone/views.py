@@ -14,3 +14,23 @@ def report_detail(request, pk):
 
 def method(request):
     return render(request, 'lightone/method.html')
+
+
+def workflow(request):
+    return render(request, 'lightone/workflow.html', dashboard_context())
+
+
+def quality(request):
+    return render(request, 'lightone/quality.html', dashboard_context())
+
+
+def reports(request):
+    return render(request, 'lightone/reports.html', dashboard_context())
+
+
+def priority(request):
+    return render(request, 'lightone/priority.html', dashboard_context())
+
+
+def roadmap(request):
+    return render(request, 'lightone/roadmap.html', dashboard_context())

@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}LIGHT ONE ?? ???{% endblock %}
+
+{% block content %}
+
+<section id="reports" class="section-block report-section">
+  <div class="section-title align-center">
+    <span>03</span>
+    <h2>??? ?? ?? ???</h2>
+    <p>
+      ??? ???? ????? ?? ?? ??? ???? ? ??, ?? ??, ??, ?? ??, ??? ?????.
+    </p>
+  </div>
+
+  <div class="report-grid">
+    {% for session in sessions %}
+    <article class="report-card">
+      <div class="report-head">
+        <div>
+          <span>{{ session.route }}</span>
+          <h3>{{ session.member_name }}</h3>
+        </div>
+        <strong class="qc-badge">{{ session.qc_status }}</strong>
+      </div>
+
+      <p class="report-goal">{{ session.goal }}</p>
+
+      <dl>
+        <div>
+          <dt>?? ??</dt>
+          <dd>{{ session.discomfort_area }}</dd>
+        </div>
+        <div>
+          <dt>QS</dt>
+          <dd>{{ session.qs_score }}</dd>
+        </div>
+        <div>
+          <dt>JATC</dt>
+          <dd>{{ session.jatc_score }}</dd>
+        </div>
+      </dl>
+
+      <p class="report-memo">{{ session.memo }}</p>
+
+      <a href="{% url 'lightone:report_detail' session.pk %}" class="card-link">
+        ??? ?? ?? ?
+      </a>
+    </article>
+    {% empty %}
+    <article class="report-card">
+      <div class="report-head">
+        <div>
+          <span>EMPTY</span>
+          <h3>?? ??? ??</h3>
+        </div>
+      </div>
+      <p class="report-goal">?? ?? ???? ????? ?? ???? ???? ???.</p>
+      <p class="report-memo">????? python manage.py seed_lightone ??? ??? ???.</p>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+
+{% endblock %}

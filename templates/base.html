@@ -32,15 +32,15 @@
         <span class="nav-ico">⌂</span>
         대시보드
       </a>
-      <a href="#progress">
+      <a href="{% url 'lightone:workflow' %}">
         <span class="nav-ico">≡</span>
         진행 현황
       </a>
-      <a href="#analysis">
+      <a href="{% url 'lightone:quality' %}">
         <span class="nav-ico">▥</span>
         분석 결과
       </a>
-      <a href="#priority">
+      <a href="{% url 'lightone:priority' %}">
         <span class="nav-ico">◇</span>
         사업 우선순위
       </a>
@@ -50,11 +50,11 @@
         <span class="nav-ico">⌘</span>
         코드 방법론
       </a>
-      <a href="#reports">
+      <a href="{% url 'lightone:reports' %}">
         <span class="nav-ico">▤</span>
         상담 리포트
       </a>
-      <a href="#roadmap">
+      <a href="{% url 'lightone:roadmap' %}">
         <span class="nav-ico">↗</span>
         로드맵
       </a>

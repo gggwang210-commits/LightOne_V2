@@ -1,0 +1,64 @@
+﻿{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}LIGHT ONE 리포트 품질 관리{% endblock %}
+
+{% block content %}
+
+<section id="analysis" class="section-block report-quality-section">
+  <div class="section-title align-center">
+    <span>02</span>
+    <h2>리포트 품질 관리 구조</h2>
+    <p>
+      LIGHT ONE의 점수와 상태값은 의료 판단이 아니라, 트레이너가 상담 전에 확인해야 할 우선순위와 데이터 신뢰도를 정리하기 위한 보조 기준입니다.
+    </p>
+  </div>
+
+  <div class="quality-layout">
+    <article class="quality-main-card">
+      <span class="quality-label">Report Readiness</span>
+      <strong>{{ avg_qs|default:"0" }}</strong>
+      <h3>상담 리포트 준비도</h3>
+      <p>
+        회원 기록의 완성도와 상담 활용 가능성을 요약한 샘플 지표입니다.
+        실제 서비스에서는 입력 항목, 트레이너 기준, 회원 관리 목적에 따라 조정됩니다.
+      </p>
+    </article>
+
+    <article class="quality-sub-card">
+      <span>JATC 평균</span>
+      <strong>{{ avg_jatc|default:"0" }}</strong>
+      <p>
+        운동 기록, 체형 관찰, 통증 반응, 상담 메모가 하나의 상담 흐름으로 연결되는지를 검토합니다.
+      </p>
+    </article>
+
+    <article class="quality-status-card">
+      <h3>검토 상태</h3>
+
+      <div class="quality-status-row pass">
+        <span>PASS</span>
+        <strong>{{ qc_counts.PASS|default:"0" }}</strong>
+        <p>상담 리포트로 바로 활용 가능</p>
+      </div>
+
+      <div class="quality-status-row check">
+        <span>CHECK</span>
+        <strong>{{ qc_counts.CHECK|default:"0" }}</strong>
+        <p>트레이너 확인 후 활용 권장</p>
+      </div>
+
+      <div class="quality-status-row fail">
+        <span>FAIL</span>
+        <strong>{{ qc_counts.FAIL|default:"0" }}</strong>
+        <p>상담 전 데이터 보완 필요</p>
+      </div>
+    </article>
+  </div>
+
+  <div class="quality-notice">
+    본 화면은 질병 진단, 치료, 처방 목적이 아니라 PT 상담 준비와 회원 관리 효율화를 위한 비의료 보조 정보입니다.
+  </div>
+</section>
+
+{% endblock %}

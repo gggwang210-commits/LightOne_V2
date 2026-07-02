@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LIGHTONE Redesigned V2</title>
+  <style>
+    :root {
+      --bg: #08111f;
+      --panel: #0f1d33;
+      --panel-strong: #142744;
+      --line: rgba(148, 163, 184, 0.24);
+      --text: #f8fafc;
+      --muted: #cbd5e1;
+      --accent: #5eead4;
+      --accent-2: #60a5fa;
+      --warn: #fbbf24;
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.32);
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--bg);
+    }
+
+    body {
+      margin: 0;
+      font-family: Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 20% 0%, rgba(96, 165, 250, 0.22), transparent 34rem),
+        radial-gradient(circle at 86% 16%, rgba(94, 234, 212, 0.16), transparent 28rem),
+        var(--bg);
+      word-break: keep-all;
+    }
+
+    .page-section {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 88px 0;
+    }
+
+    .section-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 14px;
+      color: var(--accent);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .section-title {
+      margin: 0;
+      font-size: clamp(2rem, 5vw, 4rem);
+      line-height: 1.05;
+      letter-spacing: -0.055em;
+    }
+
+    .section-lead {
+      max-width: 760px;
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 2vw, 1.18rem);
+      line-height: 1.75;
+      overflow-wrap: anywhere;
+    }
+
+    .market-stack {
+      display: grid;
+      gap: 18px;
+      margin-top: 34px;
+    }
+
+    .market-card {
+      min-width: 0;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      background: linear-gradient(145deg, rgba(20, 39, 68, 0.94), rgba(15, 29, 51, 0.9));
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .market-label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 68px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      color: #04111f;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      overflow-wrap: anywhere;
+    }
+
+    .market-meaning {
+      margin: 18px 0 0;
+      color: var(--text);
+      font-size: 1.12rem;
+      font-weight: 800;
+      line-height: 1.35;
+      overflow-wrap: anywhere;
+    }
+
+    .market-number {
+      margin: 14px 0 0;
+      font-size: clamp(2rem, 9vw, 3.35rem);
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: -0.055em;
+      overflow-wrap: anywhere;
+    }
+
+    .market-fields {
+      display: grid;
+      gap: 12px;
+      margin: 22px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .market-fields li {
+      display: grid;
+      grid-template-columns: minmax(76px, max-content) minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+      color: var(--muted);
+      font-size: 0.96rem;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+    }
+
+    .market-fields b {
+      color: #e2e8f0;
+      font-size: 0.82rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .market-source-needed {
+      color: var(--warn);
+      font-weight: 800;
+    }
+
+    .market-flow {
+      display: none;
+    }
+
+    @media (min-width: 860px) {
+      .market-stack {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0;
+        align-items: stretch;
+      }
+
+      .market-card {
+        position: relative;
+        min-width: 220px;
+        padding: 28px;
+      }
+
+      .market-card:not(:last-child) {
+        margin-right: 52px;
+      }
+
+      .market-flow {
+        position: absolute;
+        top: 50%;
+        right: -42px;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border: 1px solid rgba(94, 234, 212, 0.48);
+        border-radius: 50%;
+        color: var(--accent);
+        background: rgba(8, 17, 31, 0.96);
+        transform: translateY(-50%);
+      }
+
+      .market-flow::before {
+        content: "";
+        position: absolute;
+        left: -20px;
+        right: 30px;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(94, 234, 212, 0.7));
+      }
+    }
+
+    @media (max-width: 420px) {
+      .page-section {
+        width: min(100% - 24px, 1120px);
+        padding: 56px 0;
+      }
+
+      .market-card {
+        min-width: 0;
+        padding: 20px;
+        border-radius: 22px;
+      }
+
+      .market-fields li {
+        grid-template-columns: 1fr;
+        gap: 2px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section id="market" class="page-section" aria-labelledby="market-title">
+      <p class="section-eyebrow">Market sizing</p>
+      <h1 id="market-title" class="section-title">TAM → SAM → SOM 시장 규모</h1>
+      <p class="section-lead">
+        LIGHTONE은 글로벌 피트니스 테크 시장에서 출발해 국내 PT·웰니스 디지털 전환 시장으로 범위를 좁히고,
+        초기에는 Pro 플랜 기반의 획득 가능 매출을 현실적인 SOM으로 관리합니다.
+      </p>
+
+      <div class="market-stack" aria-label="TAM SAM SOM 시장 규모 카드">
+        <article class="market-card">
+          <span class="market-label">TAM</span>
+          <h2 class="market-meaning">전체 접근 가능 시장</h2>
+          <p class="market-number">$47.6B</p>
+          <ul class="market-fields">
+            <li><b>핵심 수치</b><span>글로벌 피트니스 테크 시장</span></li>
+            <li><b>산정 기준</b><span>글로벌 피트니스 테크 시장 규모 기준</span></li>
+            <li><b>출처</b><span class="market-source-needed">[확인필요]</span></li>
+          </ul>
+          <span class="market-flow" aria-hidden="true">→</span>
+        </article>
+
+        <article class="market-card">
+          <span class="market-label">SAM</span>
+          <h2 class="market-meaning">서비스 가능 시장</h2>
+          <p class="market-number">₩2,800억+</p>
+          <ul class="market-fields">
+            <li><b>핵심 수치</b><span>국내 PT·웰니스 디지털 전환 시장</span></li>
+            <li><b>산정 기준</b><span>국내 PT·웰니스 운영 현장의 디지털 전환 수요 기준</span></li>
+            <li><b>출처</b><span class="market-source-needed">[확인필요]</span></li>
+          </ul>
+          <span class="market-flow" aria-hidden="true">→</span>
+        </article>
+
+        <article class="market-card">
+          <span class="market-label">SOM</span>
+          <h2 class="market-meaning">초기 획득 가능 시장</h2>
+          <p class="market-number">₩58억/년</p>
+          <ul class="market-fields">
+            <li><b>핵심 수치</b><span>초기 획득 가능 시장</span></li>
+            <li><b>산정 기준</b><span>Pro 플랜 월 89,000원 × 2,000명 × 12개월</span></li>
+            <li><b>출처</b><span>내부 추정, <span class="market-source-needed">[확인필요]</span></span></li>
+          </ul>
+        </article>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

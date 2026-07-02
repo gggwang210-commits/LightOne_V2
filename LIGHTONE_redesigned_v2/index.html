@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LIGHT ONE 파일럿 연구 안내</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f6f8fb;
+        --panel: #ffffff;
+        --ink: #172033;
+        --muted: #657188;
+        --line: #dfe6ef;
+        --brand: #315cf6;
+        --brand-dark: #193bb6;
+        --soft: #eaf0ff;
+        --accent: #16a085;
+        --warn: #fff6df;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", sans-serif;
+        line-height: 1.65;
+        color: var(--ink);
+        background: radial-gradient(circle at top left, #eef4ff 0, transparent 34rem), var(--bg);
+      }
+
+      a { color: inherit; }
+
+      .page {
+        width: min(1120px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 56px 0 72px;
+      }
+
+      .hero {
+        display: grid;
+        gap: 22px;
+        padding: 48px;
+        border: 1px solid var(--line);
+        border-radius: 32px;
+        background: linear-gradient(135deg, rgba(255,255,255,.96), rgba(234,240,255,.9));
+        box-shadow: 0 24px 70px rgba(30, 55, 110, .12);
+      }
+
+      .eyebrow {
+        width: fit-content;
+        margin: 0;
+        padding: 8px 14px;
+        border-radius: 999px;
+        color: var(--brand-dark);
+        background: var(--soft);
+        font-weight: 800;
+        letter-spacing: .02em;
+      }
+
+      h1 {
+        margin: 0;
+        max-width: 780px;
+        font-size: clamp(2.25rem, 5vw, 4.75rem);
+        line-height: 1.05;
+        letter-spacing: -.055em;
+      }
+
+      .subtitle {
+        max-width: 840px;
+        margin: 0;
+        color: var(--muted);
+        font-size: clamp(1.05rem, 2vw, 1.35rem);
+      }
+
+      .route-note {
+        margin: 0;
+        color: var(--muted);
+        font-size: .95rem;
+      }
+
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+        margin-top: 28px;
+      }
+
+      .card {
+        padding: 26px;
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        background: rgba(255, 255, 255, .92);
+        box-shadow: 0 16px 38px rgba(31, 51, 90, .08);
+      }
+
+      .card h2 {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0 0 14px;
+        font-size: 1.25rem;
+      }
+
+      .icon {
+        display: inline-grid;
+        place-items: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 12px;
+        color: #fff;
+        background: var(--brand);
+        font-size: .95rem;
+      }
+
+      .card p, .card ul { margin: 0; color: var(--muted); }
+      .card ul { padding-left: 1.2rem; }
+      .card li + li { margin-top: 8px; }
+
+      .ethics {
+        grid-column: 1 / -1;
+        border-color: #f0d58b;
+        background: linear-gradient(180deg, #fffaf0, var(--panel));
+      }
+
+      .cta {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: center;
+        gap: 18px;
+        color: #fff;
+        background: linear-gradient(135deg, var(--brand), var(--accent));
+      }
+
+      .cta h2, .cta p { color: #fff; }
+      .cta .icon { background: rgba(255,255,255,.2); }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 48px;
+        padding: 0 20px;
+        border-radius: 999px;
+        color: var(--brand-dark);
+        background: #fff;
+        font-weight: 800;
+        text-decoration: none;
+        white-space: nowrap;
+      }
+
+      .fallback {
+        display: none;
+        margin-top: 24px;
+        padding: 16px 18px;
+        border-radius: 18px;
+        background: var(--warn);
+        color: #7c5a05;
+      }
+
+      @media (max-width: 760px) {
+        .page { width: min(100% - 20px, 1120px); padding-top: 28px; }
+        .hero { padding: 28px; border-radius: 24px; }
+        .cards, .cta { grid-template-columns: 1fr; }
+        .card { padding: 22px; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page" id="app" aria-live="polite"></main>
+
+    <script>
+      const app = document.querySelector('#app');
+
+      function renderPilotStudy() {
+        document.title = 'LIGHT ONE 파일럿 연구 안내';
+        app.innerHTML = `
+          <section class="hero" aria-labelledby="pilot-title">
+            <p class="eyebrow">Pilot Study</p>
+            <h1 id="pilot-title">LIGHT ONE 파일럿 연구 안내</h1>
+            <p class="subtitle">AI 체형분석 기반 컨디셔닝 케어의 사용성, 만족도, 관리 가능성을 검토하기 위한 초기 파일럿입니다.</p>
+            <p class="route-note">현재 안내 페이지: <strong>#pilot-study</strong></p>
+          </section>
+
+          <section class="cards" aria-label="파일럿 연구 주요 안내">
+            <article class="card">
+              <h2><span class="icon">01</span>연구 목적</h2>
+              <p>LIGHT ONE의 촬영, 분석, 상담 리포트 흐름이 실제 컨디셔닝 케어 현장에서 이해하기 쉽고 운영 가능한지 초기 사용성을 확인합니다.</p>
+            </article>
+
+            <article class="card">
+              <h2><span class="icon">02</span>참여 대상</h2>
+              <ul>
+                <li>컨디셔닝, 퍼스널 트레이닝, 웰니스 관리에 관심이 있는 성인</li>
+                <li>안내된 촬영 및 설문 절차에 자발적으로 참여할 수 있는 분</li>
+                <li>필요 시 트레이너 또는 운영자의 설명을 듣고 피드백을 제공할 수 있는 분</li>
+              </ul>
+            </article>
+
+            <article class="card">
+              <h2><span class="icon">03</span>진행 절차</h2>
+              <ul>
+                <li>파일럿 안내 및 참여 의사 확인</li>
+                <li>기본 컨디션, 운동 목표, 생활습관 관련 사전 설문</li>
+                <li>안내 기준에 따른 체형 촬영 및 AI 기반 분석 리포트 생성</li>
+                <li>리포트 확인 후 사용성, 만족도, 관리 가능성 피드백 수집</li>
+              </ul>
+            </article>
+
+            <article class="card">
+              <h2><span class="icon">04</span>수집 데이터</h2>
+              <ul>
+                <li>촬영 이미지 또는 분석에 필요한 자세 관련 입력값</li>
+                <li>운동 목표, 주관적 컨디션, 생활습관 등 설문 응답</li>
+                <li>서비스 사용성, 이해도, 만족도, 개선 의견</li>
+                <li>운영 과정에서 필요한 최소한의 참여 관리 정보</li>
+              </ul>
+            </article>
+
+            <article class="card ethics">
+              <h2><span class="icon">05</span>개인정보 및 연구윤리</h2>
+              <ul>
+                <li>수집 데이터는 파일럿 목적 범위 내에서만 사용</li>
+                <li>개인 식별 정보는 최소화</li>
+                <li>민감 정보는 별도 동의와 보호 절차 필요</li>
+                <li>[확인필요] 개인정보 처리방침, 참여 동의서, IRB 또는 연구윤리 검토 필요 여부</li>
+              </ul>
+            </article>
+
+            <article class="card cta">
+              <div>
+                <h2><span class="icon">06</span>문의 CTA</h2>
+                <p>파일럿 참여, 기관 협업, 데이터 처리 기준에 대한 문의는 LIGHT ONE 운영팀으로 남겨주세요.</p>
+              </div>
+              <a class="button" href="mailto:hello@lightone.example?subject=LIGHT%20ONE%20파일럿%20연구%20문의">파일럿 문의하기</a>
+            </article>
+          </section>
+        `;
+      }
+
+      function renderNotFound() {
+        document.title = 'LIGHT ONE 안내';
+        app.innerHTML = `
+          <section class="hero">
+            <p class="eyebrow">LIGHT ONE</p>
+            <h1>안내 페이지를 선택해 주세요.</h1>
+            <p class="subtitle">파일럿 연구 안내는 <a href="#pilot-study">#pilot-study</a> 경로에서 확인할 수 있습니다.</p>
+          </section>
+          <p class="fallback">요청하신 해시 경로가 준비되지 않았습니다.</p>
+        `;
+      }
+
+      function route() {
+        if (window.location.hash === '#pilot-study') {
+          renderPilotStudy();
+        } else {
+          renderNotFound();
+        }
+      }
+
+      window.addEventListener('hashchange', route);
+      route();
+    </script>
+  </body>
+</html>

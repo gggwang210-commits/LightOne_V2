@@ -11,7 +11,7 @@ class Command(BaseCommand):
 
         sessions = [
             {'member_name': '김도윤', 'goal': '체형 변화 기록 및 재등록 상담', 'discomfort_area': '목·어깨', 'qs_score': 72.4, 'jatc_score': 68.0, 'form_accuracy': 79, 'pain_response': 2, 'rpe': 6, 'route': 'AUTO', 'qc_status': 'PASS', 'memo': '상담 리포트 자동 생성 가능. 촬영 조건 양호.'},
-            {'member_name': '이서연', 'goal': '하체 근력 회복 및 운동 지속', 'discomfort_area': '무릎', 'qs_score': 63.2, 'jatc_score': 61.5, 'form_accuracy': 70, 'pain_response': 4, 'rpe': 7, 'route': 'REVIEW', 'qc_status': 'CHECK', 'memo': '통증 반응 기록이 있어 트레이너 검토 권장.'},
+            {'member_name': '이서연', 'goal': '하체 근력 컨디셔닝 및 운동 지속', 'discomfort_area': '무릎', 'qs_score': 63.2, 'jatc_score': 61.5, 'form_accuracy': 70, 'pain_response': 4, 'rpe': 7, 'route': 'REVIEW', 'qc_status': 'CHECK', 'memo': '통증 반응 기록이 있어 트레이너 검토 권장.'},
             {'member_name': '박민준', 'goal': '러닝 자세 개선', 'discomfort_area': '허리', 'qs_score': 81.5, 'jatc_score': 74.3, 'form_accuracy': 86, 'pain_response': 1, 'rpe': 5, 'route': 'AUTO', 'qc_status': 'PASS', 'memo': '전후 비교 리포트에 적합.'},
             {'member_name': '최하린', 'goal': '상체 안정화 루틴', 'discomfort_area': '손목', 'qs_score': 49.0, 'jatc_score': 44.6, 'form_accuracy': 50, 'pain_response': 7, 'rpe': 8, 'route': 'BLOCK', 'qc_status': 'FAIL', 'memo': '통증 반응이 높아 운동 중단 및 전문가 상담 권고 문구 필요.'},
             {'member_name': '정유찬', 'goal': '바디프로필 준비 관리', 'discomfort_area': '없음', 'qs_score': 67.5, 'jatc_score': 66.1, 'form_accuracy': 74, 'pain_response': 2, 'rpe': 7, 'route': 'AUTO', 'qc_status': 'PASS', 'memo': '상담 자료로 사용 가능.'},

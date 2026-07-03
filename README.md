@@ -372,6 +372,11 @@ LIGHTONE V2는 **비의료 웰니스·운동 상담 지원 서비스**로 설계
 | [비의료 경계 정책](docs/governance/non-medical-boundary.md) | 의료 오인 방지를 위한 기능·표현·라우팅 기준 |
 | [개인정보 보호 체크리스트](docs/governance/privacy-checklist.md) | 파일럿과 MVP 운영 시 개인정보·민감 기록 취급 기준 |
 | [파일럿 검증 계획](docs/validation/pilot-validation-plan.md) | 센터 파일럿 목표, 지표, 절차, 중단 기준 |
+| [트레이너·센터 고객 인터뷰 질문지](docs/validation/trainer-interview-script.md) | PT샵·헬스장·필라테스 센터·트레이너 대상 고객 문제 검증 질문지 |
+| [고객 발견 인터뷰 로그 템플릿](docs/validation/customer-discovery-log-template.md) | 인터뷰 결과, 핵심 가설, 지불의사, 후속 액션 기록 양식 |
+| [WTP 지불의사 테스트 계획](docs/validation/wtp-test-plan.md) | 월 구독·리포트당 과금 수용성 검증 계획 |
+| [파일럿 센터 리스트 템플릿](docs/validation/pilot-center-list-template.md) | 동의 기반·비식별화·최소수집 원칙의 파일럿 후보 관리 양식 |
+| [LIGHTONE V2 1페이지 사업 요약](docs/submission/one-page-business-summary.md) | 고객검증·파일럿 실행 전 단계의 외부 설명용 1페이지 요약 |
 | [모두의창업 2기 제출 요약](docs/submission/modu-startup-summary.md) | 외부 제출용 1~2페이지 사업 요약 |
 | [Windows 실행 가이드](docs/execution-guide/windows-run-guide.md) | 저장소 루트 기준 Windows 실행 절차 |
 | [Django MVP README](lightone_v2_django/README.md) | MVP 기능, 계정, 빠른 시작, 라우팅 기준 |

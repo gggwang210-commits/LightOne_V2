@@ -1,102 +1,266 @@
 <!doctype html>
 <html lang="ko">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>LIGHTONE Redesigned v2</title>
-  <meta name="description" content="LIGHTONE redesigned v2 static single-page proposal with hash router." />
-  <link rel="stylesheet" href="assets/css/styles.css" />
-</head>
-<body>
-  <a class="skip-link" href="#app">본문으로 이동</a>
-  <header class="site-header" aria-label="LIGHTONE 공통 헤더">
-    <nav class="nav-shell">
-      <a class="brand" href="#home" aria-label="LIGHTONE 홈으로 이동">
-        <span class="brand-mark">L1</span>
-        <span>LIGHTONE</span>
-      </a>
-      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="route-nav">메뉴</button>
-      <div id="route-nav" class="route-nav" aria-label="페이지 경로"></div>
-    </nav>
-  </header>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LIGHT ONE 파일럿 연구 안내</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f6f8fb;
+        --panel: #ffffff;
+        --ink: #172033;
+        --muted: #657188;
+        --line: #dfe6ef;
+        --brand: #315cf6;
+        --brand-dark: #193bb6;
+        --soft: #eaf0ff;
+        --accent: #16a085;
+        --warn: #fff6df;
+      }
 
-  <main id="app" class="app-shell" tabindex="-1"></main>
+      * { box-sizing: border-box; }
 
-  <footer class="site-footer">
-    <div>
-      <strong>LIGHTONE Redesigned v2</strong>
-      <p>정적 배포와 검토 편의성을 위한 단일 HTML + 내부 hash router 프로토타입.</p>
-    </div>
-    <a class="footer-link" href="#contact">문의하기</a>
-  </footer>
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", sans-serif;
+        line-height: 1.65;
+        color: var(--ink);
+        background: radial-gradient(circle at top left, #eef4ff 0, transparent 34rem), var(--bg);
+      }
 
-  <script src="assets/js/app.js" defer></script>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>LIGHT ONE | PT 트레이너를 위한 AI 체형분석 상담 리포트 SaaS</title>
-  <meta name="description" content="LIGHT ONE은 PT 트레이너가 회원의 체형 변화를 수치로 보여주고 재등록 상담에 바로 쓸 수 있도록 돕는 AI 기반 상담 리포트 SaaS입니다.">
-  <meta property="og:title" content="LIGHT ONE | PT 트레이너를 위한 AI 체형분석 상담 리포트 SaaS">
-  <meta property="og:description" content="모두의 창업 2기, 공공기관 제출, SNS 홍보, 파일럿 연구 안내를 위한 LIGHT ONE 사업소개 페이지입니다.">
-  <meta property="og:type" content="website">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/styles.css">
-</head>
-<body>
-  <a class="skip-link" href="#main">본문 바로가기</a>
-  <header class="site-header">
-    <div class="nav-shell">
-      <a class="brand" href="#home" aria-label="LIGHT ONE 홈으로 이동">
-        <span class="brand-mark">L1</span><span><strong>LIGHT ONE</strong><small>PT Report SaaS</small></span>
-      </a>
-      <button class="nav-toggle" type="button" aria-label="메뉴 열기" aria-expanded="false">☰</button>
-      <nav class="site-nav" aria-label="주요 페이지">
-        <a href="#home">Home</a><a href="#problem">Problem</a><a href="#solution">Solution</a><a href="#ai-analysis">AI Flow</a><a href="#market">Market</a><a href="#business-model">Business</a><a href="#pilot-study">Pilot</a><a href="#roadmap">Roadmap</a><a href="#public-submission">Submission</a><a href="#promotion">Promotion</a><a href="#contact">Contact</a>
-      </nav>
-    </div>
-  </header>
+      a { color: inherit; }
 
-  <main id="main">
-    <section class="page active" id="home" data-page="home" tabindex="-1">
-      <div class="hero layout-two">
-        <div>
-          <span class="eyebrow">모두의 창업 2기 · AI 체형분석 · 상담 리포트 SaaS</span>
-          <h1>PT 트레이너를 위한<br>AI 체형분석 상담 리포트 SaaS</h1>
-          <p class="lead">LIGHT ONE은 PT 트레이너가 회원의 체형 변화를 수치로 보여주고 재등록 상담에 바로 쓸 수 있도록 돕는 AI 기반 상담 리포트 SaaS입니다.</p>
-          <div class="cta-row"><a class="btn primary" href="#public-submission">공모전/제출용 소개 보기</a><a class="btn ghost" href="#pilot-study">파일럿 연구 안내 보기</a></div>
-        </div>
-        <div class="hero-card" role="img" aria-label="LIGHT ONE 서비스 요약 카드">
-          <span>Problem</span><p>PT 기록 분산, 컨디션 관리 근거 부족, 상담 품질 편차</p>
-          <span>Solution</span><p>주 1회 촬영 + 자동 점수화 + 재등록 상담 리포트</p>
-          <span>Position</span><p>의료 판단이 아닌 운동 지도 보조·상담 리포트 SaaS</p>
-        </div>
-      </div>
-      <div class="section compact"><h2>한눈에 보는 LIGHT ONE</h2><div class="card-grid three"><article class="card"><h3>심사용 구조</h3><p>모두의 창업 2기 심사 기준에 맞춰 제목, 구조, 수입원, 실행 계획, 리스크 방어를 분리했습니다.</p></article><article class="card"><h3>일반 고객 이해</h3><p>공유 시 “PT 상담 리포트 자동화 SaaS”라는 서비스 성격이 바로 보이도록 문구를 단순화했습니다.</p></article><article class="card"><h3>파일럿 준비</h3><p>촬영·설문·피드백 데이터 수집과 개인정보 보호, 연구윤리 검토 필요성을 명확히 안내합니다.</p></article></div></div>
-    </section>
+      .page {
+        width: min(1120px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 56px 0 72px;
+      }
 
-    <section class="page" id="problem" data-page="problem" tabindex="-1"><div class="page-head"><span class="eyebrow">Problem Definition</span><h1>재등록 상담의 문제는<br>성과를 보여줄 객관 자료의 부족입니다</h1><p>기존 PT 시장 전체를 부정하지 않고, 현장에서 반복되는 기록·상담·관리의 공백을 현실적으로 정의합니다.</p></div><div class="card-grid three"><article class="card"><h3>고객 관점</h3><p>회원은 “달라진 게 없는 것 같다”고 느끼기 쉽고, 체형 변화나 운동 반응을 눈에 보이는 숫자로 확인하기 어렵습니다.</p></article><article class="card"><h3>트레이너 관점</h3><p>트레이너는 사진 정리, 세션 기록, 상담 자료 준비에 시간을 쓰지만 그 데이터가 재등록 상담에 바로 연결되지 않습니다.</p></article><article class="card"><h3>센터 관점</h3><p>원장은 트레이너별 상담 품질 편차와 낮은 재등록률을 관리해야 하지만, 표준화된 리포트 도구가 부족합니다.</p></article></div></section>
+      .hero {
+        display: grid;
+        gap: 22px;
+        padding: 48px;
+        border: 1px solid var(--line);
+        border-radius: 32px;
+        background: linear-gradient(135deg, rgba(255,255,255,.96), rgba(234,240,255,.9));
+        box-shadow: 0 24px 70px rgba(30, 55, 110, .12);
+      }
 
-    <section class="page" id="solution" data-page="solution" tabindex="-1"><div class="page-head"><span class="eyebrow">Solution</span><h1>주차별 체형 변화를 수치화해<br>상담 리포트로 자동 정리합니다</h1><p>LIGHT ONE은 트레이너의 판단을 대체하지 않고, 촬영·점수화·리포트 자동화를 통해 운동 지도와 상담을 보조합니다.</p></div><div class="feature-list"><article><b>01</b><h3>AI 체형분석</h3><p>정면·측면 촬영 데이터를 기반으로 어깨·골반·척추·무릎·발목 정렬 관찰 정보를 정리합니다.</p></article><article><b>02</b><h3>설문 기반 컨디션 파악</h3><p>통증·RPE·운동 경험 응답을 함께 기록해 AUTO/REVIEW/BLOCK 검토 우선순위에 참고합니다.</p></article><article><b>03</b><h3>회복 중심 운동 설계</h3><p>항목별 가중치와 100점 만점 종합 점수로 주차별 변화를 추적할 수 있게 돕습니다.</p></article><article><b>04</b><h3>리포트 기반 관리</h3><p>자동 생성 리포트를 통해 회원 상담, 운동 방향 조정, 재등록 설명 자료로 활용합니다.</p></article></div></section>
+      .eyebrow {
+        width: fit-content;
+        margin: 0;
+        padding: 8px 14px;
+        border-radius: 999px;
+        color: var(--brand-dark);
+        background: var(--soft);
+        font-weight: 800;
+        letter-spacing: .02em;
+      }
 
-    <section class="page" id="ai-analysis" data-page="ai-analysis" tabindex="-1"><div class="page-head"><span class="eyebrow">Service Flow</span><h1>촬영 조건 단순화부터<br>주차별 피드백까지 연결합니다</h1><p>모바일에서는 단계별 카드로, 넓은 화면에서는 프로세스 플로우로 읽히도록 구성했습니다.</p></div><ol class="process-flow"><li><span>1</span><h3>촬영 또는 입력</h3><p>같은 조건에서 기준선 양발 위치를 맞추고 정면·측면 사진을 촬영합니다.</p></li><li><span>2</span><h3>기본 설문</h3><p>통증 수치, RPE, 운동 목표, 불편감 여부를 간단히 기록합니다.</p></li><li><span>3</span><h3>AI 분석</h3><p>어깨·골반·척추·무릎·발목 정렬도와 좌우 편차를 추출합니다.</p></li><li><span>4</span><h3>리포트 생성</h3><p>항목별 점수와 종합 점수, 주차별 변화 리포트를 생성합니다.</p></li><li><span>5</span><h3>운동 방향 제안</h3><p>트레이너가 검토할 운동 방향과 상담 포인트를 정리합니다.</p></li><li><span>6</span><h3>관리 피드백</h3><p>재등록 상담과 다음 세션 조정에 활용할 피드백을 축적합니다.</p></li></ol></section>
+      h1 {
+        margin: 0;
+        max-width: 780px;
+        font-size: clamp(2.25rem, 5vw, 4.75rem);
+        line-height: 1.05;
+        letter-spacing: -.055em;
+      }
 
-    <section class="page" id="market" data-page="market" tabindex="-1"><div class="page-head"><span class="eyebrow">Market Sizing</span><h1>TAM → SAM → SOM 시장 규모</h1><p>체력단련장·필라테스·요가 시설을 초기 고객으로 삼고, PT 상담 리포트 SaaS 시장으로 진입합니다. 통계는 제출 전 원문 재확인이 필요합니다.</p></div><div class="market-cards"><article class="market-card"><span class="label">TAM</span><small>전체 접근 가능 시장</small><h2>26,735개소</h2><h3>전국 피트니스 시설 합계</h3><p>기준: 헬스·요가·필라테스 포함 2023년 기준 시설 수</p><em>출처: 문화체육관광부 2023년 말 기준, [확인필요]</em></article><article class="market-card highlight"><span class="label">SAM</span><small>서비스 가능 시장</small><h2>약 1.6만~2.7만</h2><h3>도입 가능 피트니스 시설</h3><p>기준: 체력단련장 14,773개소 + 체육교습업 2,651개소 + 미등록 시설 포함 추정</p><em>출처: 문화체육관광부 2023년 말 기준, [확인필요]</em></article><article class="market-card"><span class="label">SOM</span><small>초기 획득 가능 시장</small><h2>₩1,794만/년</h2><h3>1년차 정식 출시 매출 목표</h3><p>기준: 50개 시설 × Starter 월 29,900원 × 12개월</p><em>출처: 내부 추정, [확인필요]</em></article></div><div class="notice"><strong>주의:</strong> 시장 수치와 산정 기준은 공공기관 제출 전 문화체육관광부, 한국소비자원 등 원문 출처와 조사 연도 재검토가 필요합니다.</div></section>
+      .subtitle {
+        max-width: 840px;
+        margin: 0;
+        color: var(--muted);
+        font-size: clamp(1.05rem, 2vw, 1.35rem);
+      }
 
-    <section class="page" id="business-model" data-page="business-model" tabindex="-1"><div class="page-head"><span class="eyebrow">Business Model</span><h1>B2B 구독을 핵심으로<br>단건 리포트와 데이터 인사이트로 확장합니다</h1><p>아직 검증되지 않은 매출은 확정 성과가 아니라 가설과 검증 예정 항목으로 구분합니다.</p></div><div class="card-grid three"><article class="card"><h3>B2B 구독</h3><p>Starter 월 ₩29,900, Pro 월 ₩59,900, Enterprise 협의형으로 PT샵·헬스장·필라테스샵에 월정액으로 제공합니다. [확인필요]</p></article><article class="card"><h3>리포트 단건 판매</h3><p>비구독 시설도 리포트 1건 ₩2,900 단건 과금으로 진입 장벽을 낮출 수 있습니다. [확인필요]</p></article><article class="card"><h3>데이터 인사이트</h3><p>익명 집계 트렌드 리포트와 B2B2C 데이터 인사이트는 중장기 확장 모델로 검토합니다. [확인필요]</p></article></div></section>
+      .route-note {
+        margin: 0;
+        color: var(--muted);
+        font-size: .95rem;
+      }
 
-    <section class="page" id="pilot-study" data-page="pilot-study" tabindex="-1"><div class="page-head"><span class="eyebrow">Pilot Study</span><h1>LIGHT ONE 파일럿 연구 안내</h1><p>AI 체형분석 상담 리포트의 사용성, 만족도, 재등록 상담 활용 가능성을 검토하기 위한 초기 파일럿입니다.</p></div><div class="accordion"><details open><summary>연구 목적</summary><ul><li>AI 체형분석 리포트의 이해도 확인</li><li>개인 맞춤 운동 방향 제안의 사용성 검토</li><li>통증·불편감·운동 지속성 관리 가능성 탐색</li><li>실제 PT 현장에서의 적용 가능성 검토</li></ul></details><details><summary>참여 대상</summary><ul><li>체형 불균형, 통증, 운동 지속성 저하를 느끼는 성인</li><li>PT 또는 컨디셔닝 관리에 관심 있는 사람</li><li>스마트폰 기반 촬영·설문 참여가 가능한 사람</li></ul></details><details><summary>진행 방식</summary><p>사전 안내 및 동의 → 기본 설문 → 체형/움직임 데이터 입력 → AI 기반 리포트 확인 → 컨디셔닝 운동 제안 → 피드백 설문</p></details><details><summary>수집 데이터</summary><ul><li>기본 설문 응답</li><li>체형·자세 관련 이미지 또는 측정 정보</li><li>통증·불편감 관련 자가 응답</li><li>운동 수행 및 만족도 피드백</li></ul></details><details><summary>개인정보 및 연구윤리</summary><p>수집 데이터는 파일럿 목적 범위 내에서만 사용하며 개인 식별 정보는 최소화합니다. 민감 정보는 별도 동의와 보호 절차가 필요합니다.</p><p class="risk">[확인필요] 개인정보 처리방침, 참여 동의서, IRB 또는 연구윤리 검토 필요 여부</p></details></div><div class="cta-panel"><h2>참여 또는 협력을 원하시나요?</h2><div class="cta-row"><a class="btn primary" href="#contact">파일럿 참여 문의</a><a class="btn ghost" href="#contact">협력 기관 제안</a><a class="btn ghost" href="#contact">데모 요청</a></div></div></section>
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+        margin-top: 28px;
+      }
 
-    <section class="page" id="roadmap" data-page="roadmap" tabindex="-1"><div class="page-head"><span class="eyebrow">Roadmap</span><h1>실행 가능한 5단계 성장 계획</h1><p>과도한 장기 예측보다 MVP 개선, 파일럿, 데이터 축적, 제휴, SaaS 확장 순서로 정리합니다.</p></div><ol class="timeline"><li><b>MVP 개선</b><span>리포트 UX, 설문, 촬영 안내, 관리자 화면 정리</span></li><li><b>파일럿 연구</b><span>사용성·만족도·재등록 상담 활용 가능성 검토</span></li><li><b>데이터 축적</b><span>비식별·동의 기반 운동 수행 및 피드백 데이터 확보</span></li><li><b>PT 센터 제휴</b><span>중소형 센터 대상 B2B 검증</span></li><li><b>B2B/SaaS 확장</b><span>전문가 리포트, 권한 관리, 교육·인증 IP 확장</span></li></ol></section>
+      .card {
+        padding: 26px;
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        background: rgba(255, 255, 255, .92);
+        box-shadow: 0 16px 38px rgba(31, 51, 90, .08);
+      }
 
-    <section class="page" id="public-submission" data-page="public-submission" tabindex="-1"><div class="page-head"><span class="eyebrow">Public Submission Summary</span><h1>공공기관·공모전 제출용 요약</h1><p>심사위원이 3~5분 안에 사업성, 문제 정의, 솔루션, 시장성, 실행 가능성, 리스크 관리를 검토할 수 있는 요약본입니다.</p></div><div class="summary-table" role="table" aria-label="공공기관 제출용 요약"><div><b>사업명</b><span>LIGHT ONE — AI 체형분석 기반 컨디셔닝 케어</span></div><div><b>한 줄 소개</b><span>PT 트레이너가 회원의 체형 변화를 수치로 보여주고 재등록 상담에 바로 쓸 수 있는 AI 기반 상담 리포트 SaaS</span></div><div><b>문제 정의</b><span>재등록 상담 근거 부재, 기록 업무 비효율, 안전 신호 관리 공백</span></div><div><b>해결책</b><span>주 1회 촬영, 체형 항목 자동 점수화, 100점 리포트, AUTO/REVIEW/BLOCK 검토 우선순위</span></div><div><b>핵심 고객</b><span>1인 PT샵, 소규모 헬스장, 필라테스샵 트레이너 및 원장</span></div><div><b>시장성</b><span>전국 피트니스 시설 26,735개소, 도입 가능 시설 약 1.6만~2.7만 개소, 1년차 매출 목표 ₩1,794만/년 — 모두 [확인필요]</span></div><div><b>차별성</b><span>고가 장비 없이 스마트폰 촬영 기반으로 주차별 변화를 추적하는 Human-in-the-loop 상담 리포트 구조</span></div><div><b>수익 모델</b><span>B2B 구독, 리포트 단건 판매, 익명 집계 데이터 인사이트</span></div><div><b>파일럿 계획</b><span>사용성, 만족도, 재등록 상담 활용 가능성, 현장 적용 가능성 검토</span></div><div><b>확인 필요</b><span>문화체육관광부·한국소비자원 원문 출처, 의료기기 해당 여부, 참여 동의서, 개인정보 처리방침, IRB 검토, 외부 배포 정책</span></div></div></section>
+      .card h2 {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0 0 14px;
+        font-size: 1.25rem;
+      }
 
-    <section class="page" id="promotion" data-page="promotion" tabindex="-1"><div class="page-head"><span class="eyebrow">Promotion</span><h1>체형 변화를 숫자로 보여주는<br>PT 상담 리포트</h1><p>일반 고객, 지인, 트레이너, 센터 운영자가 쉽게 이해할 수 있도록 서비스 콘셉트를 간결하게 정리했습니다.</p></div><div class="card-grid three"><article class="card"><h3>누구에게 필요한가요?</h3><p>회원에게 변화 과정을 설명해야 하는 PT 트레이너와 소규모 센터 운영자에게 적합합니다.</p></article><article class="card"><h3>어떤 도움을 주나요?</h3><p>주차별 촬영과 점수 리포트로 상담 자료 준비 시간을 줄이고, 회원이 변화를 이해하도록 돕습니다.</p></article><article class="card"><h3>공유용 한 문장</h3><p>LIGHT ONE은 PT 트레이너가 회원의 체형 변화를 수치로 보여주고 상담 리포트로 바로 활용하도록 돕는 AI SaaS입니다.</p></article></div><div class="cta-row center"><a class="btn primary" href="#contact">문의하기</a><a class="btn ghost" href="#pilot-study">파일럿 보기</a></div></section>
+      .icon {
+        display: inline-grid;
+        place-items: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 12px;
+        color: #fff;
+        background: var(--brand);
+        font-size: .95rem;
+      }
 
-    <section class="page" id="contact" data-page="contact" tabindex="-1"><div class="page-head"><span class="eyebrow">Contact / CTA</span><h1>목적에 맞게 문의를 선택하세요</h1><p>제출, 파일럿, 데모, 협력 제안을 분리해 다음 행동을 명확히 안내합니다.</p></div><div class="contact-grid"><a class="contact-card" href="#public-submission"><b>공모전 제출용 요약 보기</b><span>심사용 핵심 정보 검토</span></a><a class="contact-card" href="mailto:contact@lightone.example?subject=LIGHT%20ONE%20파일럿%20연구%20문의"><b>파일럿 연구 문의하기</b><span>참여자·협력 기관 문의</span></a><a class="contact-card" href="mailto:contact@lightone.example?subject=LIGHT%20ONE%20서비스%20데모%20요청"><b>서비스 데모 요청하기</b><span>리포트와 화면 흐름 확인</span></a><a class="contact-card" href="mailto:contact@lightone.example?subject=LIGHT%20ONE%20협력%20제안"><b>협력 제안하기</b><span>센터·기관·전문가 협력</span></a></div><p class="notice">연락처와 운영 주체 정보는 실제 배포 전 확정 정보로 교체해야 합니다. [확인필요]</p></section>
-  </main>
+      .card p, .card ul { margin: 0; color: var(--muted); }
+      .card ul { padding-left: 1.2rem; }
+      .card li + li { margin-top: 8px; }
 
-  <footer class="site-footer"><p>© LIGHT ONE. 비의료 운동 지도 보조 및 PT 상담 리포트 SaaS 소개 페이지입니다.</p><p>[확인필요] 시장 수치 출처 · 개인정보 처리방침 · 연구윤리 검토 · 외부 배포 정책</p></footer>
-  <script src="assets/js/app.js"></script>
-</body>
+      .ethics {
+        grid-column: 1 / -1;
+        border-color: #f0d58b;
+        background: linear-gradient(180deg, #fffaf0, var(--panel));
+      }
+
+      .cta {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: center;
+        gap: 18px;
+        color: #fff;
+        background: linear-gradient(135deg, var(--brand), var(--accent));
+      }
+
+      .cta h2, .cta p { color: #fff; }
+      .cta .icon { background: rgba(255,255,255,.2); }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 48px;
+        padding: 0 20px;
+        border-radius: 999px;
+        color: var(--brand-dark);
+        background: #fff;
+        font-weight: 800;
+        text-decoration: none;
+        white-space: nowrap;
+      }
+
+      .fallback {
+        display: none;
+        margin-top: 24px;
+        padding: 16px 18px;
+        border-radius: 18px;
+        background: var(--warn);
+        color: #7c5a05;
+      }
+
+      @media (max-width: 760px) {
+        .page { width: min(100% - 20px, 1120px); padding-top: 28px; }
+        .hero { padding: 28px; border-radius: 24px; }
+        .cards, .cta { grid-template-columns: 1fr; }
+        .card { padding: 22px; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page" id="app" aria-live="polite"></main>
+
+    <script>
+      const app = document.querySelector('#app');
+
+      function renderPilotStudy() {
+        document.title = 'LIGHT ONE 파일럿 연구 안내';
+        app.innerHTML = `
+          <section class="hero" aria-labelledby="pilot-title">
+            <p class="eyebrow">Pilot Study</p>
+            <h1 id="pilot-title">LIGHT ONE 파일럿 연구 안내</h1>
+            <p class="subtitle">AI 체형분석 기반 컨디셔닝 케어의 사용성, 만족도, 관리 가능성을 검토하기 위한 초기 파일럿입니다.</p>
+            <p class="route-note">현재 안내 페이지: <strong>#pilot-study</strong></p>
+          </section>
+
+          <section class="cards" aria-label="파일럿 연구 주요 안내">
+            <article class="card">
+              <h2><span class="icon">01</span>연구 목적</h2>
+              <p>LIGHT ONE의 촬영, 분석, 상담 리포트 흐름이 실제 컨디셔닝 케어 현장에서 이해하기 쉽고 운영 가능한지 초기 사용성을 확인합니다.</p>
+            </article>
+
+            <article class="card">
+              <h2><span class="icon">02</span>참여 대상</h2>
+              <ul>
+                <li>컨디셔닝, 퍼스널 트레이닝, 웰니스 관리에 관심이 있는 성인</li>
+                <li>안내된 촬영 및 설문 절차에 자발적으로 참여할 수 있는 분</li>
+                <li>필요 시 트레이너 또는 운영자의 설명을 듣고 피드백을 제공할 수 있는 분</li>
+              </ul>
+            </article>
+
+            <article class="card">
+              <h2><span class="icon">03</span>진행 절차</h2>
+              <ul>
+                <li>파일럿 안내 및 참여 의사 확인</li>
+                <li>기본 컨디션, 운동 목표, 생활습관 관련 사전 설문</li>
+                <li>안내 기준에 따른 체형 촬영 및 AI 기반 분석 리포트 생성</li>
+                <li>리포트 확인 후 사용성, 만족도, 관리 가능성 피드백 수집</li>
+              </ul>
+            </article>
+
+            <article class="card">
+              <h2><span class="icon">04</span>수집 데이터</h2>
+              <ul>
+                <li>촬영 이미지 또는 분석에 필요한 자세 관련 입력값</li>
+                <li>운동 목표, 주관적 컨디션, 생활습관 등 설문 응답</li>
+                <li>서비스 사용성, 이해도, 만족도, 개선 의견</li>
+                <li>운영 과정에서 필요한 최소한의 참여 관리 정보</li>
+              </ul>
+            </article>
+
+            <article class="card ethics">
+              <h2><span class="icon">05</span>개인정보 및 연구윤리</h2>
+              <ul>
+                <li>수집 데이터는 파일럿 목적 범위 내에서만 사용</li>
+                <li>개인 식별 정보는 최소화</li>
+                <li>민감 정보는 별도 동의와 보호 절차 필요</li>
+                <li>[확인필요] 개인정보 처리방침, 참여 동의서, IRB 또는 연구윤리 검토 필요 여부</li>
+              </ul>
+            </article>
+
+            <article class="card cta">
+              <div>
+                <h2><span class="icon">06</span>문의 CTA</h2>
+                <p>파일럿 참여, 기관 협업, 데이터 처리 기준에 대한 문의는 LIGHT ONE 운영팀으로 남겨주세요.</p>
+              </div>
+              <a class="button" href="mailto:hello@lightone.example?subject=LIGHT%20ONE%20파일럿%20연구%20문의">파일럿 문의하기</a>
+            </article>
+          </section>
+        `;
+      }
+
+      function renderNotFound() {
+        document.title = 'LIGHT ONE 안내';
+        app.innerHTML = `
+          <section class="hero">
+            <p class="eyebrow">LIGHT ONE</p>
+            <h1>안내 페이지를 선택해 주세요.</h1>
+            <p class="subtitle">파일럿 연구 안내는 <a href="#pilot-study">#pilot-study</a> 경로에서 확인할 수 있습니다.</p>
+          </section>
+          <p class="fallback">요청하신 해시 경로가 준비되지 않았습니다.</p>
+        `;
+      }
+
+      function route() {
+        if (window.location.hash === '#pilot-study') {
+          renderPilotStudy();
+        } else {
+          renderNotFound();
+        }
+      }
+
+      window.addEventListener('hashchange', route);
+      route();
+    </script>
+  </body>
 </html>

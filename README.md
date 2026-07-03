@@ -35,6 +35,7 @@ PT샵·헬스장·필라테스 센터가 회원의 운동 수행, 통증 반응,
 12. [다음 조치](#12-다음-조치)
 13. [저장소 운영 규칙](#13-저장소-운영-규칙)
 14. [면책 조항](#14-면책-조항)
+15. [문서 지도](#15-문서-지도)
 
 ---
 
@@ -360,6 +361,21 @@ LIGHTONE V2는 **비의료 웰니스·운동 상담 지원 서비스**로 설계
 ## 14. 면책 조항
 
 본 문서는 사업 기획, 기술 검증, 비의료 운동 상담 서비스 설계를 위한 자료입니다. 의료 진단, 치료, 처방, 효능·효과 검증, 질병 예측을 목적으로 하지 않습니다. 통증·자세·운동 관련 정보는 트레이너가 검토할 참고 자료이며, 의학적 판단이 필요한 경우 의료 전문가의 판단이 우선합니다.
+
+---
+
+## 15. 문서 지도
+
+| 문서 | 용도 |
+|------|------|
+| [저장소 맵](docs/repository-map.md) | 루트 README, Django MVP, 실행 문서, 거버넌스 문서의 관계를 한눈에 확인 |
+| [비의료 경계 정책](docs/governance/non-medical-boundary.md) | 의료 오인 방지를 위한 기능·표현·라우팅 기준 |
+| [개인정보 보호 체크리스트](docs/governance/privacy-checklist.md) | 파일럿과 MVP 운영 시 개인정보·민감 기록 취급 기준 |
+| [파일럿 검증 계획](docs/validation/pilot-validation-plan.md) | 센터 파일럿 목표, 지표, 절차, 중단 기준 |
+| [모두의창업 2기 제출 요약](docs/submission/modu-startup-summary.md) | 외부 제출용 1~2페이지 사업 요약 |
+| [Windows 실행 가이드](docs/execution-guide/windows-run-guide.md) | 저장소 루트 기준 Windows 실행 절차 |
+| [Django MVP README](lightone_v2_django/README.md) | MVP 기능, 계정, 빠른 시작, 라우팅 기준 |
+| [기존 Windows 실행 문서](lightone_v2_django/RUN_WINDOWS.md) | Django 폴더 내부 기준의 간단 실행 명령 |
 
 ---
 

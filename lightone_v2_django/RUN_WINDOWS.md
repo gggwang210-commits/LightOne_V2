@@ -1,6 +1,8 @@
 # Windows 실행 가이드
 
-현재 기준 Django 프로젝트 폴더는 `lightone_v2_django`입니다. 모든 명령은 `manage.py`와 `requirements.txt`가 있는 이 폴더에서 실행합니다.
+> 저장소 루트 기준의 자세한 Windows 안내는 [`../docs/execution-guide/windows-run-guide.md`](../docs/execution-guide/windows-run-guide.md)를 참고하세요. 전체 사업 방향은 [`../README.md`](../README.md), MVP 기능과 계정 정보는 [`README.md`](README.md)에 정리되어 있습니다.
+
+이미 Anaconda Python이 정상 작동하고 있다면 가상환경 없이도 실행 확인이 가능합니다.
 
 > 구버전 안내: `lightone_django`, `lightone_django_complete.zip`, `LIGHTONE_V2_Complete.zip` 같은 이름이 보이는 예전 안내는 현재 `lightone_v2_django` 기준으로 바꿔 실행하세요.
 

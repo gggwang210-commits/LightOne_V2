@@ -88,6 +88,12 @@ python manage.py runserver
 | `프로젝트_구조_설명.md` | 폴더/파일 구조 및 핵심 개념 설명 |
 | `기능_개발_가이드.md` | 다음 기능 추가 방법 (대시보드, PDF 리포트 등) |
 | `전략서_및_인포그래픽/` | 사업 기획 문서 및 인포그래픽 Rev.5 |
+| [`../docs/repository-map.md`](../docs/repository-map.md) | 저장소 루트 문서 지도 및 신규 기여자 안내 |
+| [`../docs/governance/non-medical-boundary.md`](../docs/governance/non-medical-boundary.md) | 비의료 표현·기능 경계와 라우팅 문구 기준 |
+| [`../docs/governance/privacy-checklist.md`](../docs/governance/privacy-checklist.md) | 개인정보·민감 기록 취급 체크리스트 |
+| [`../docs/validation/pilot-validation-plan.md`](../docs/validation/pilot-validation-plan.md) | 센터 파일럿 검증 목표와 운영 절차 |
+| [`../docs/submission/modu-startup-summary.md`](../docs/submission/modu-startup-summary.md) | 모두의창업 2기 제출용 요약 |
+| [`../docs/execution-guide/windows-run-guide.md`](../docs/execution-guide/windows-run-guide.md) | 저장소 루트 기준 Windows 실행 가이드 |
 
 ---
 
@@ -108,5 +114,7 @@ python manage.py runserver
 - 개인정보보호법, 의료법 관련 사항은 서비스 출시 전 전문가 확인이 필요합니다. [확인필요]
 
 ---
+
+추가로, 전체 사업 방향은 [루트 README](../README.md), Windows 간단 실행은 [RUN_WINDOWS.md](RUN_WINDOWS.md)를 참고하세요.
 
 **LIGHT ONE V2 · Rev.05 · 2026.07.01**

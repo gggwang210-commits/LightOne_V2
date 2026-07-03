@@ -1,11 +1,65 @@
 from django.core.management.base import BaseCommand
+
+from accounts.models import MemberProfile, TrainerProfile, User
 from lightone.models import MemberSession, StrategyItem
 
 
 class Command(BaseCommand):
-    help = 'Create LIGHT ONE premium dashboard demo data.'
+    help = 'Create LIGHT ONE premium dashboard demo data and login accounts.'
 
     def handle(self, *args, **options):
+        trainer_user, _ = User.objects.get_or_create(
+            username='admin',
+            defaults={
+                'email': 'admin@example.com',
+                'name': '김라이트(관리자)',
+                'role': 'trainer',
+                'is_staff': True,
+                'is_superuser': True,
+            },
+        )
+        trainer_user.email = 'admin@example.com'
+        trainer_user.name = '김라이트(관리자)'
+        trainer_user.role = 'trainer'
+        trainer_user.is_staff = True
+        trainer_user.is_superuser = True
+        trainer_user.set_password('admin')
+        trainer_user.save()
+
+        trainer_profile, _ = TrainerProfile.objects.get_or_create(
+            user=trainer_user,
+            defaults={
+                'certification_no': 'TR-2026-001',
+                'center_name': 'LIGHT ONE 랩스',
+            },
+        )
+        trainer_profile.certification_no = 'TR-2026-001'
+        trainer_profile.center_name = 'LIGHT ONE 랩스'
+        trainer_profile.save()
+
+        member_specs = [
+            ('member1', 'm1@example.com', '이슬비', 'F', '라운드숄더 개선 및 체력 증진'),
+            ('member2', 'm2@example.com', '허병철', 'M', '허리 통증 완화 및 근력 강화'),
+        ]
+        member_profiles = {}
+        for username, email, name, sex, goals in member_specs:
+            user, _ = User.objects.get_or_create(
+                username=username,
+                defaults={'email': email, 'name': name, 'role': 'member'},
+            )
+            user.email = email
+            user.name = name
+            user.role = 'member'
+            user.is_staff = False
+            user.is_superuser = False
+            user.set_password('1234')
+            user.save()
+            profile, _ = MemberProfile.objects.get_or_create(user=user)
+            profile.sex = sex
+            profile.goals = goals
+            profile.save()
+            member_profiles[name] = profile
+
         MemberSession.objects.all().delete()
         StrategyItem.objects.all().delete()
 
@@ -16,9 +70,16 @@ class Command(BaseCommand):
             {'member_name': '최하린', 'goal': '상체 안정화 루틴', 'discomfort_area': '손목', 'qs_score': 49.0, 'jatc_score': 44.6, 'form_accuracy': 50, 'pain_response': 7, 'rpe': 8, 'route': 'BLOCK', 'qc_status': 'FAIL', 'memo': '통증 반응이 높아 운동 중단 및 전문가 상담 권고 문구 필요.'},
             {'member_name': '정유찬', 'goal': '바디프로필 준비 관리', 'discomfort_area': '없음', 'qs_score': 67.5, 'jatc_score': 66.1, 'form_accuracy': 74, 'pain_response': 2, 'rpe': 7, 'route': 'AUTO', 'qc_status': 'PASS', 'memo': '상담 자료로 사용 가능.'},
             {'member_name': '오지민', 'goal': '운동 습관 형성', 'discomfort_area': '어깨', 'qs_score': 58.2, 'jatc_score': 55.9, 'form_accuracy': 63, 'pain_response': 5, 'rpe': 8, 'route': 'REVIEW', 'qc_status': 'CHECK', 'memo': 'RPE와 통증 반응 확인 필요.'},
+            {'member_name': '이슬비', 'goal': '상체 후면 근력 강화', 'discomfort_area': '오른쪽 어깨', 'qs_score': 83.0, 'jatc_score': 72.0, 'form_accuracy': 80, 'pain_response': 3, 'rpe': 6, 'route': 'AUTO', 'qc_status': 'PASS', 'memo': '견갑골 안정화 양호. 회원 계정 member1과 연결된 샘플.'},
+            {'member_name': '허병철', 'goal': '하체 근력 및 허리 안정화', 'discomfort_area': '허리 하단', 'qs_score': 52.0, 'jatc_score': 50.0, 'form_accuracy': 55, 'pain_response': 6, 'rpe': 8, 'route': 'REVIEW', 'qc_status': 'CHECK', 'memo': '가동범위 제한 및 코어 안정화 우선. 회원 계정 member2와 연결된 샘플.'},
         ]
         for item in sessions:
-            MemberSession.objects.create(**item)
+            MemberSession.objects.create(
+                **item,
+                member=member_profiles.get(item['member_name']),
+                trainer=trainer_profile,
+                trainer_name=trainer_user.name,
+            )
 
         strategies = [
             {'title': '고객 인터뷰 질문지 작성', 'category': '고객검증', 'priority': '높음', 'status': '대기', 'output': 'PT샵 대표, 헬스장 대표, 트레이너 대상 인터뷰 질문지', 'risk': '지인 중심 인터뷰는 편향 가능'},
@@ -30,4 +91,5 @@ class Command(BaseCommand):
         for item in strategies:
             StrategyItem.objects.create(**item)
 
-        self.stdout.write(self.style.SUCCESS('LIGHT ONE premium demo data created.'))
+        self.stdout.write(self.style.SUCCESS('LIGHT ONE demo data and login accounts created.'))
+        self.stdout.write('Login accounts: admin/admin, member1/1234, member2/1234')

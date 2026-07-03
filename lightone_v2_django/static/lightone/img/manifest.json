@@ -10,7 +10,7 @@
   },
   {
     "file": "02_hero_sub_medical_light.png",
-    "description": "서브 히어로 슬림 배경 / secondary medical hero strip",
+    "description": "서브 히어로 슬림 배경 / secondary wellness background strip",
     "size": [
       918,
       180
@@ -91,7 +91,7 @@
   },
   {
     "file": "10_02_hospital_corridor_blur.png",
-    "description": "병원 복도 배경 / hospital corridor background",
+    "description": "웰니스 공간 배경 / wellness background",
     "size": [
       212,
       126
@@ -100,7 +100,7 @@
   },
   {
     "file": "10_03_hand_hologram_body.png",
-    "description": "손 위 신체 홀로그램 / body hologram in hand",
+    "description": "컨디셔닝 안내 비주얼 / conditioning visual",
     "size": [
       212,
       126
@@ -109,7 +109,7 @@
   },
   {
     "file": "10_04_heartbeat_signal.png",
-    "description": "심전도·심박 신호 / heartbeat signal",
+    "description": "운동 리듬 데이터 패턴 / conditioning data pattern",
     "size": [
       219,
       126
@@ -118,7 +118,7 @@
   },
   {
     "file": "10_05_dna_medical_texture.png",
-    "description": "DNA 의료 텍스처 / DNA medical texture",
+    "description": "추상 데이터 패턴 / abstract data pattern",
     "size": [
       211,
       126
@@ -127,7 +127,7 @@
   },
   {
     "file": "10_06_smartwatch_health.png",
-    "description": "스마트워치 헬스 이미지 / smartwatch health image",
+    "description": "스마트워치 컨디셔닝 이미지 / smartwatch conditioning visual",
     "size": [
       210,
       126
@@ -136,7 +136,7 @@
   },
   {
     "file": "10_07_medical_plus_icon.png",
-    "description": "의료 플러스 아이콘 / medical plus icon",
+    "description": "웰니스 지원 아이콘 / wellness support icon",
     "size": [
       185,
       126

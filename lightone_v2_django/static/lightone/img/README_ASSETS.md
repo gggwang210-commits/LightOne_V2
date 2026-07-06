@@ -30,6 +30,27 @@
 - `11_05_network_node_pattern.png` — 네트워크 노드 패턴 / network node pattern — 280x95
 
 
+## 자산 사용 정책 / Asset usage policy
+
+LIGHT ONE은 병원/의료 진단 제품처럼 보이는 시각 표현을 피한다. 공개 서비스 화면, 랜딩 페이지, 세일즈 자료, 앱 화면에서는 병원 복도, 의료 십자, DNA/진단 질감, 임상 장비, 진료·처방을 암시하는 이미지를 사용하지 않는다.
+
+대체 이미지 방향은 다음과 같이 비의료 웰니스·피트니스 맥락을 우선한다.
+
+- PT 상담 장면
+- 트레이너 대시보드
+- 운동 기록
+- 웰니스 컨디셔닝
+- 회원 유지/재등록 상담
+
+### 의료 오인 가능 자산 검토 대상
+
+| 자산 | 결정 | 운영 기준 | 대체 이미지 방향 |
+| --- | --- | --- | --- |
+| `lightone_v2_django/static/lightone/img/10_02_hospital_corridor_blur.png` | 공개 서비스 화면에서는 사용하지 않음 | 병원 복도를 연상시키므로 랜딩·앱·세일즈 화면에서 제외한다. | PT 상담 장면, 웰니스 컨디셔닝 공간 |
+| `lightone_v2_django/static/lightone/img/10_05_dna_medical_texture.png` | 비의료 웰니스/피트니스 이미지로 교체 필요 | DNA/의료 질감은 진단·임상 이미지를 만들 수 있으므로 추상 운동 데이터 또는 운동 기록 패턴으로 교체한다. | 운동 기록, 트레이너 대시보드 |
+| `lightone_v2_django/static/lightone/img/10_07_medical_plus_icon.png` | 파일명 변경 필요 | 의료 십자 및 `medical` 명칭은 의료 서비스로 오인될 수 있으므로 공개 화면 사용 전 비의료 아이콘과 파일명으로 교체한다. | 회원 유지/재등록 상담, 웰니스 지원 아이콘 |
+| `lightone_v2_django/static/lightone/img/02_hero_sub_medical_light.png` | 파일명 변경 필요 | 현재 설명은 웰니스 배경이나 `medical` 파일명이 남아 있어 공개 사용 전 비의료 명칭으로 정리한다. | 트레이너 대시보드, 웰니스 컨디셔닝 |
+
 ## Django CSS 사용 예시
 
 ```css

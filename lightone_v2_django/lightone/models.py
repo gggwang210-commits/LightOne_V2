@@ -1,7 +1,6 @@
 import uuid
 
-from django.db import models
-
+from .algorithms import SAFETY_NOTICE, calculate_jatc, calculate_qs, route_session
 from accounts.models import MemberProfile, TrainerProfile
 from .algorithms import SAFETY_NOTICE, calculate_jatc, calculate_qs, route_session
 
@@ -128,6 +127,12 @@ class MemberSession(models.Model):
     function_training_score = models.FloatField(default=0)
     pain_response = models.FloatField(default=0)
     rpe = models.FloatField(default=0)
+    qc_score = models.FloatField(default=100)
+    qs_form_component = models.FloatField(default=0)
+    qs_discomfort_component = models.FloatField(default=0)
+    qs_rpe_component = models.FloatField(default=0)
+    qs_qc_component = models.FloatField(default=100)
+    safety_notice = models.CharField(max_length=80, default=SAFETY_NOTICE)
     route = models.CharField(max_length=10, choices=ROUTE_CHOICES, default='AUTO')
     qc_status = models.CharField(max_length=10, choices=QC_CHOICES, default='PASS')
     memo = models.TextField(blank=True)
@@ -143,21 +148,14 @@ class MemberSession(models.Model):
         return f'{self.member_name} - {self.route}'
 
     def calculate_qs_and_route(self):
-        """
-        규칙 기반 엔진 (MVP용)
-        """
-        self.qs_score = calculate_qs(
-            self.form_accuracy,
-            self.pain_response,
-            self.rpe,
-            self.qc_score,
-        )
-        self.jatc_score = calculate_jatc(
-            self.posture_score or (self.form_accuracy * 10),
-            self.lifestyle_score,
-            self.function_training_score or self.qs_score,
-        )
-        self.route = route_session(self.qs_score, self.pain_response, self.qc_status)
+        """Calculate MVP QS/JATC scores and non-medical trainer review routing."""
+        self.qs_form_component = self.form_accuracy * 10 if self.form_accuracy <= 10 else self.form_accuracy
+        self.qs_discomfort_component = 100 - (self.pain_response * 10)
+        self.qs_rpe_component = 100 - (abs(self.rpe - 7) * 10)
+        self.qs_qc_component = self.qc_score
+        self.qs_score = calculate_qs(self.form_accuracy, self.pain_response, self.rpe, self.qc_score)
+        self.jatc_score = calculate_jatc(self.qs_score, self.form_accuracy, self.pain_response, self.rpe)
+        self.route = route_session(self.qs_score, self.jatc_score, self.pain_response, self.qc_status)
         self.safety_notice = SAFETY_NOTICE
         self.save()
 

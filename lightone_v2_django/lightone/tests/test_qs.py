@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 
 import django
-from django.test import TestCase
+from django.test import SimpleTestCase
 
 PROJECT_DIR = Path(__file__).resolve().parents[2]
 if str(PROJECT_DIR) not in sys.path:
@@ -15,7 +15,7 @@ from lightone.algorithms import SAFETY_NOTICE, calculate_jatc, calculate_qs, rou
 from lightone.models import MemberSession  # noqa: E402
 
 
-class QsAlgorithmTests(TestCase):
+class QsAlgorithmTests(SimpleTestCase):
     def test_calculate_qs_uses_documented_weights(self):
         score = calculate_qs(form_accuracy=8, pain_response=2, rpe=7, qc_score=90)
         self.assertEqual(score, 85.0)
@@ -26,7 +26,7 @@ class QsAlgorithmTests(TestCase):
         self.assertEqual(route_session(85, 1, "FAIL"), "BLOCK")
 
     def test_member_session_recalculates_scores_and_safety_notice(self):
-        session = MemberSession.objects.create(
+        session = MemberSession(
             member_name="데모회원 A",
             goal="합성 테스트",
             form_accuracy=8,
@@ -38,6 +38,7 @@ class QsAlgorithmTests(TestCase):
             rpe=7,
             qc_status="PASS",
         )
+        session.save = lambda *args, **kwargs: None
         session.calculate_qs_and_route()
         self.assertEqual(session.qs_score, 85.0)
         self.assertEqual(session.jatc_score, calculate_jatc(82, 70, 78))

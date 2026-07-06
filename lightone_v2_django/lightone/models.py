@@ -2,6 +2,7 @@ import uuid
 
 from .algorithms import SAFETY_NOTICE, calculate_jatc, calculate_qs, route_session
 from accounts.models import MemberProfile, TrainerProfile
+from .algorithms import SAFETY_NOTICE, calculate_jatc, calculate_qs, route_session
 
 
 class Member(models.Model):
@@ -120,6 +121,10 @@ class MemberSession(models.Model):
     qs_score = models.FloatField(default=0)
     jatc_score = models.FloatField(default=0)
     form_accuracy = models.FloatField(default=0)
+    qc_score = models.FloatField(default=100)
+    posture_score = models.FloatField(default=0)
+    lifestyle_score = models.FloatField(default=0)
+    function_training_score = models.FloatField(default=0)
     pain_response = models.FloatField(default=0)
     rpe = models.FloatField(default=0)
     qc_score = models.FloatField(default=100)
@@ -131,6 +136,9 @@ class MemberSession(models.Model):
     route = models.CharField(max_length=10, choices=ROUTE_CHOICES, default='AUTO')
     qc_status = models.CharField(max_length=10, choices=QC_CHOICES, default='PASS')
     memo = models.TextField(blank=True)
+    review_note = models.TextField(blank=True)
+    safety_notice = models.TextField(default=SAFETY_NOTICE)
+    trainer_confirmed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -150,6 +158,99 @@ class MemberSession(models.Model):
         self.route = route_session(self.qs_score, self.jatc_score, self.pain_response, self.qc_status)
         self.safety_notice = SAFETY_NOTICE
         self.save()
+
+
+class Member(models.Model):
+    STATUS_CHOICES = [
+        ('ACTIVE', 'Active'),
+        ('PAUSED', 'Paused'),
+        ('ARCHIVED', 'Archived'),
+    ]
+
+    synthetic_id = models.CharField(max_length=40, unique=True)
+    display_label = models.CharField(max_length=80)
+    goal = models.CharField(max_length=120, blank=True)
+    experience_level = models.CharField(max_length=40, blank=True)
+    discomfort_area = models.CharField(max_length=80, blank=True)
+    consent_status = models.CharField(max_length=30, default='synthetic_demo')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='ACTIVE')
+    notes = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['synthetic_id']
+
+    def __str__(self):
+        return self.display_label
+
+
+class Session(models.Model):
+    ROUTE_CHOICES = [
+        ('AUTO', 'AUTO'),
+        ('REVIEW', 'REVIEW'),
+        ('BLOCK', 'BLOCK'),
+    ]
+    QC_CHOICES = [
+        ('PASS', 'PASS'),
+        ('CHECK', 'CHECK'),
+        ('FAIL', 'FAIL'),
+    ]
+
+    session_id = models.CharField(max_length=40, unique=True)
+    member = models.ForeignKey(Member, on_delete=models.CASCADE, related_name='session_records')
+    exercise_name = models.CharField(max_length=120)
+    session_date = models.DateField()
+    planned_reps = models.PositiveIntegerField(default=0)
+    completed_reps = models.PositiveIntegerField(default=0)
+    planned_rest_seconds = models.PositiveIntegerField(default=0)
+    actual_rest_seconds = models.PositiveIntegerField(default=0)
+    rpe = models.PositiveSmallIntegerField(default=0)
+    pain_response = models.PositiveSmallIntegerField(default=0)
+    trainer_memo = models.TextField(blank=True)
+    capture_condition = models.CharField(max_length=120, blank=True)
+    qc_status = models.CharField(max_length=10, choices=QC_CHOICES, default='PASS')
+    route = models.CharField(max_length=10, choices=ROUTE_CHOICES, default='AUTO')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-session_date', 'session_id']
+
+    def __str__(self):
+        return f'{self.session_id} - {self.member.display_label}'
+
+
+class Indicator(models.Model):
+    ROUTE_CHOICES = Session.ROUTE_CHOICES
+    REPORT_CHOICES = [
+        ('PENDING', 'Pending'),
+        ('READY', 'Ready'),
+        ('HELD', 'Held'),
+    ]
+
+    session = models.OneToOneField(Session, on_delete=models.CASCADE, related_name='indicator')
+    posture_score = models.FloatField(default=0)
+    lifestyle_score = models.FloatField(default=0)
+    rep_achievement_rate = models.FloatField(default=0)
+    rest_compliance = models.FloatField(default=0)
+    pain_score = models.FloatField(default=0)
+    function_training_score = models.FloatField(default=0)
+    qs_score = models.FloatField(default=0)
+    jatc_score = models.FloatField(default=0)
+    review_signal = models.CharField(max_length=10, choices=ROUTE_CHOICES, default='AUTO')
+    counseling_priority = models.PositiveSmallIntegerField(default=3)
+    report_status = models.CharField(max_length=10, choices=REPORT_CHOICES, default='PENDING')
+    review_note = models.TextField(blank=True)
+    trainer_confirmed = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-qs_score', 'session__session_id']
+
+    def __str__(self):
+        return f'{self.session.session_id} indicator'
 
 
 class StrategyItem(models.Model):

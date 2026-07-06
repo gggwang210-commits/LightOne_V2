@@ -133,6 +133,7 @@
       <small>상담 판단 보조 지표</small>
     </div>
 
+    <canvas id="analysisBarsChart" height="140"></canvas>
     {% for item in feature_importance %}
     <div class="bar-row">
       <span>{{ item.name }}</span>
@@ -210,6 +211,22 @@
     </table>
   </div>
 </section>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const qsTrend = {{ qs_trend|safe }};
+  const featureImportance = {{ feature_importance|safe }};
+  new Chart(document.getElementById('qsTrendChart'), {
+    type: 'line',
+    data: { labels: qsTrend.map((item) => item.label), datasets: [{ label: 'QS', data: qsTrend.map((item) => item.score), borderColor: '#1f6fff', tension: 0.35 }] },
+    options: { responsive: true, scales: { y: { min: 0, max: 100 } } }
+  });
+  new Chart(document.getElementById('analysisBarsChart'), {
+    type: 'bar',
+    data: { labels: featureImportance.map((item) => item.name), datasets: [{ label: '기여도', data: featureImportance.map((item) => item.value), backgroundColor: '#69b7ff' }] },
+    options: { responsive: true, scales: { y: { min: 0, max: 1 } } }
+  });
+</script>
 
 <section id="priority" class="section-block">
   <div class="section-title">

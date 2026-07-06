@@ -24,6 +24,8 @@ def dashboard_context():
         {'name': '생활습관', 'value': 0.06},
     ]
 
+    qs_trend = [{'label': s.created_at.strftime('%m/%d'), 'score': s.qs_score} for s in reversed(sessions[:8])]
+
     return {
         'sessions': sessions,
         'strategy_items': StrategyItem.objects.all()[:6],

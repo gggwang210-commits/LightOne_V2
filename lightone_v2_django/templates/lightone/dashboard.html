@@ -108,7 +108,21 @@
 
   <div class="notice">
     <b>ⓘ Safety Boundary</b>
-    이 화면은 진단·치료 목적이 아니라 PT 상담과 웰니스 피드백을 위한 프로토타입입니다.
+    {{ safety_notice }} · 이 화면은 PT 상담과 웰니스 피드백을 위한 프로토타입입니다.
+  </div>
+</section>
+
+
+<section id="charts" class="section-block two-col">
+  <div class="panel-card">
+    <div class="panel-head"><h3>QS 추이 선 그래프</h3><small>{{ safety_notice }}</small></div>
+    {{ chart_labels|json_script:"chart-labels" }}
+    {{ chart_qs|json_script:"chart-qs" }}
+    <canvas id="qsTrendChart" height="150"></canvas>
+  </div>
+  <div class="panel-card">
+    <div class="panel-head"><h3>QS Breakdown 바 차트</h3><small>0.4 / 0.3 / 0.2 / 0.1 가중 평균</small></div>
+    <canvas id="qsBreakdownChart" height="150"></canvas>
   </div>
 </section>
 
@@ -157,7 +171,7 @@
     </div>
 
     <p class="muted">
-      통증 반응이 높거나 촬영 QC가 낮으면 REVIEW/BLOCK으로 분류하여
+      불편감 반응이 높거나 촬영 QC가 낮으면 REVIEW/BLOCK으로 분류하여
       트레이너 확인 흐름으로 넘깁니다. AI는 최종 판단자가 아니라 상담 보조 레이어입니다.
     </p>
   </div>
@@ -186,6 +200,14 @@
       </div>
     </a>
     {% endfor %}
+  </div>
+
+  <div class="panel-card recent-table-card">
+    <h3>최근 세션 목록</h3>
+    <table class="recent-table">
+      <thead><tr><th>회원</th><th>목표</th><th>QS</th><th>JATC</th><th>라우팅</th></tr></thead>
+      <tbody>{% for s in sessions|slice:":6" %}<tr><td>{{ s.member_name }}</td><td>{{ s.goal }}</td><td>{{ s.qs_score }}</td><td>{{ s.jatc_score }}</td><td><span class="route-pill route-{{ s.route|lower }}">{{ s.route }}</span></td></tr>{% endfor %}</tbody>
+    </table>
   </div>
 </section>
 
@@ -234,4 +256,13 @@
     </div>
   </div>
 </section>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const chartLabels = JSON.parse(document.getElementById('chart-labels').textContent);
+const chartQs = JSON.parse(document.getElementById('chart-qs').textContent);
+new Chart(document.getElementById('qsTrendChart'), {type:'line', data:{labels:chartLabels, datasets:[{label:'QS', data:chartQs, borderColor:'#1f6fff', backgroundColor:'rgba(31,111,255,.12)', tension:.35, fill:true}]}, options:{responsive:true, scales:{y:{min:0,max:100}}}});
+new Chart(document.getElementById('qsBreakdownChart'), {type:'bar', data:{labels:['폼 0.4','불편감 0.3','RPE 0.2','QC 0.1'], datasets:[{label:'Weight', data:[40,30,20,10], backgroundColor:['#1f6fff','#1ed6a3','#f5a400','#91a0b7']}]}, options:{responsive:true, scales:{y:{min:0,max:50}}}});
+</script>
+
 {% endblock %}

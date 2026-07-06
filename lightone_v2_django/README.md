@@ -7,7 +7,7 @@
 
 ## 이 프로젝트는 무엇인가요?
 
-LIGHT ONE은 PT(퍼스널 트레이닝) 현장에서 회원의 운동 기록, 통증 수치(NRS), 운동자각도(RPE), 자세 관찰 데이터를 구조화하여 트레이너의 판단을 보조하는 **데이터 기반 PT 상담 보조 서비스**입니다.
+LIGHT ONE은 PT(퍼스널 트레이닝) 현장에서 회원의 운동 기록, 불편감 반응 수치, 운동자각도(RPE), 자세 관찰 데이터를 구조화하여 트레이너의 판단을 보조하는 **데이터 기반 PT 상담 보조 서비스**입니다.
 
 - AI가 트레이너를 대체하는 것이 아니라, **트레이너의 판단을 보조**합니다.
 - 의료적 진단·치료·처방을 대체하지 않습니다.
@@ -74,13 +74,27 @@ python manage.py runserver
 
 ---
 
+
+## MVP 개발 체크리스트 진행 로그 (2026-07-06)
+
+- Step 0: 프로젝트 구조를 확인했고 Django 앱 경로는 `lightone_v2_django`입니다. `python manage.py check` 통과 상태입니다.
+- Synthetic 데이터만 사용합니다. `seed_lightone` 명령은 데모 계정과 가상 회원 세션만 생성하며 실제 회원 정보 입력을 금지합니다.
+- Step 1: `MemberSession`에 QS/JATC breakdown, QC 점수, 안전 문구 필드를 추가했습니다. 개인정보는 이름/목표/불편감 메모 수준의 MVP 데모 필드로 제한하고 운영 전 익명 식별자 전환이 필요합니다.
+- Step 2: QS 0.4/0.3/0.2/0.1 가중 평균, JATC 종합 점수, AUTO/REVIEW/BLOCK 라우팅 함수를 구현하고 테스트를 추가했습니다.
+- Step 3: 대시보드에 QS 추이 선 그래프, QS breakdown 바 차트, 라우팅 색상, 최근 세션 테이블을 추가했습니다.
+- Step 4: 상세 리포트에 Basic HTML Report Generator 섹션과 필수 안전 문구를 표시합니다.
+- Step 5: URL/View/Form 연결을 유지하고 세션 입력에서 QC 상태와 QC 점수를 함께 기록합니다.
+- Step 6: 전체 테스트는 `python manage.py test`로 확인합니다. runserver E2E는 로컬 실행 후 `/lightone/session/new/` → `/lightone/` → `/lightone/report/<id>/` 흐름으로 확인하세요.
+
+필수 문구: **비의료 운동상담 참고, 트레이너 검토 필요**
+
 ## 주요 기능
 
 | 기능 | URL | 설명 |
 |------|-----|------|
 | 로그인 | `/accounts/login/` | 회원/트레이너 계정 분리 |
 | 대시보드 | `/lightone/` | 회원 목록 및 QS 현황 |
-| 세션 입력 | `/lightone/session/new/` | 운동 기록, 통증, RPE 입력 |
+| 세션 입력 | `/lightone/session/new/` | 운동 기록, 불편감 반응, RPE 입력 |
 | 리포트 | `/lightone/report/<id>/` | 회원별 상세 리포트 |
 | 관리자 | `/admin/` | Django 관리자 페이지 |
 
@@ -90,9 +104,9 @@ python manage.py runserver
 
 | 라우팅 | 조건 | 의미 |
 |--------|------|------|
-| **AUTO** (초록) | NRS < 4 & QS ≥ 70 | 일반 진행 가능 |
-| **REVIEW** (노랑) | NRS 4–6 또는 QS 40–70 | 트레이너 검토 필요 |
-| **BLOCK** (빨강) | NRS ≥ 7 또는 QS < 40 | 안전상 중단 권고 신호 (의료 진단 아님) |
+| **AUTO** (초록) | 불편감 반응 < 4 & QS ≥ 70 | 일반 진행 가능 |
+| **REVIEW** (노랑) | 불편감 반응 4–6 또는 QS 40–70 | 트레이너 검토 필요 |
+| **BLOCK** (빨강) | 불편감 반응 ≥ 7 또는 QS < 40 | 안전상 중단 권고 신호 (의료 진단 아님) |
 
 > 현재 QS/JATC 및 AUTO/REVIEW/BLOCK 임계값은 MVP 데모용 내부 초안이며 의료 판단 기준이 아닙니다. 파일럿 데이터와 전문가 검토 후 조정이 필요하고, BLOCK은 진단이 아니라 운동 세션 중단 및 전문가 상담 권고 신호입니다.
 >

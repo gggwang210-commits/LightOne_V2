@@ -1,6 +1,7 @@
 import uuid
 
-from .algorithms import SAFETY_NOTICE, calculate_jatc, calculate_qs, route_session
+from django.db import models
+
 from accounts.models import MemberProfile, TrainerProfile
 from .algorithms import SAFETY_NOTICE, calculate_jatc, calculate_qs, route_session
 
@@ -98,7 +99,6 @@ class Indicator(models.Model):
         return f'Indicator {str(self.indicator_id)[:8]} - {self.routing_status}'
 
 
-
 class MemberSession(models.Model):
     ROUTE_CHOICES = [
         ('AUTO', 'AUTO'),
@@ -113,7 +113,7 @@ class MemberSession(models.Model):
 
     member = models.ForeignKey(MemberProfile, on_delete=models.CASCADE, null=True, blank=True, related_name='sessions')
     trainer = models.ForeignKey(TrainerProfile, on_delete=models.SET_NULL, null=True, blank=True, related_name='conducted_sessions')
-    
+
     member_name = models.CharField(max_length=80)
     trainer_name = models.CharField(max_length=80, default='김라이트')
     goal = models.CharField(max_length=120)

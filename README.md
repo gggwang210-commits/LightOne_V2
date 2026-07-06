@@ -423,3 +423,44 @@ LIGHTONE V2는 **비의료 웰니스·운동 상담 지원 서비스**로 설계
 ---
 
 *LIGHTONE V2 — 측정이 아니라, 설명 가능한 컨디셔닝 상담 시스템.*
+
+---
+
+## Dashboard Strategy: Role-based Product Architecture
+
+LIGHT ONE의 상용화형 대시보드는 **회원(Member) · 트레이너(Trainer) · 관리자/센터 매니저(Admin)** 3개 역할을 기준으로 설계됩니다. 목적은 운동 수행, 통증 반응 기록, 자세·동작 참고 지표, 세션 피드백, 리포트, 예약, 결제를 하나의 비의료 웰니스 상담 운영 흐름으로 연결하는 것입니다.
+
+### Non-medical safety boundary
+
+LIGHT ONE은 의료 진단, 질병 예측, 치료, 처방, 재활 처방, 통증 원인 확정, 임상 의사결정 지원을 제공하지 않습니다. 대시보드의 모든 지표와 문구는 **AI-assisted consultation support**, **pain response record**, **caution signal**, **conditioning program suggestion**, **trainer review**, **non-medical wellness reference report** 범위로 제한합니다.
+
+### Member / Trainer / Admin dashboard overview
+
+| Role | Dashboard purpose | Key sections |
+|---|---|---|
+| Member Dashboard | 오늘 컨디션, 최근 변화, 트레이너 피드백, 다음 행동, 예약/결제를 쉽게 이해 | Today Summary, Condition Score Card, Pain Response Trend, Trainer Feedback, Reservation, Payment, Report History |
+| Trainer Dashboard | 회원 변화 검토, 주의 신호 확인, 세션 기록, 리포트 초안 검토, 재등록 상담 준비 | Today Sessions, Member Change Timeline, QS/JATC Summary, AUTO/REVIEW/BLOCK Queue, Report Drafts, Re-registration Candidates |
+| Admin / Center Manager Dashboard | 센터 운영, 트레이너 업무, 회원 상태, 리포트 사용, 예약/결제, 권한과 감사 로그 관리 | Center Overview, Trainer Performance, Member Status, Report Generation Metrics, Payment Overview, Permission Management |
+
+### Dashboard documentation
+
+- [Dashboard Strategy](docs/dashboard_strategy.md)
+- [Member Dashboard Specification](docs/member_dashboard_spec.md)
+- [Trainer Dashboard Specification](docs/trainer_dashboard_spec.md)
+- [Admin Dashboard Specification](docs/admin_dashboard_spec.md)
+- [Dashboard Information Architecture](docs/dashboard_information_architecture.md)
+- [Dashboard Component Library](docs/dashboard_component_library.md)
+- [Dashboard Data Model](docs/dashboard_data_model.md)
+- [Dashboard Sample User Flows](docs/dashboard_sample_user_flows.md)
+- [Dashboard Safety Copy Guidelines](docs/dashboard_safety_copy_guidelines.md)
+- [Codex Implementation Plan](docs/dashboard_codex_implementation_plan.md)
+
+### Static dashboard prototype
+
+- [Member Dashboard Prototype](prototype/dashboards/member_dashboard.html)
+- [Trainer Dashboard Prototype](prototype/dashboards/trainer_dashboard.html)
+- [Admin Dashboard Prototype](prototype/dashboards/admin_dashboard.html)
+- [Dashboard Theme CSS](prototype/dashboards/dashboard_theme.css)
+- [Dashboard Mock Data](prototype/dashboards/dashboard_mock_data.js)
+
+Prototype files are dependency-free and use synthetic data only.

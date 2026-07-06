@@ -3,6 +3,7 @@ import uuid
 from django.db import models
 
 from accounts.models import MemberProfile, TrainerProfile
+from .algorithms import SAFETY_NOTICE, calculate_jatc, calculate_qs, route_session
 
 
 class Member(models.Model):
@@ -121,11 +122,18 @@ class MemberSession(models.Model):
     qs_score = models.FloatField(default=0)
     jatc_score = models.FloatField(default=0)
     form_accuracy = models.FloatField(default=0)
+    qc_score = models.FloatField(default=100)
+    posture_score = models.FloatField(default=0)
+    lifestyle_score = models.FloatField(default=0)
+    function_training_score = models.FloatField(default=0)
     pain_response = models.FloatField(default=0)
     rpe = models.FloatField(default=0)
     route = models.CharField(max_length=10, choices=ROUTE_CHOICES, default='AUTO')
     qc_status = models.CharField(max_length=10, choices=QC_CHOICES, default='PASS')
     memo = models.TextField(blank=True)
+    review_note = models.TextField(blank=True)
+    safety_notice = models.TextField(default=SAFETY_NOTICE)
+    trainer_confirmed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -138,19 +146,19 @@ class MemberSession(models.Model):
         """
         규칙 기반 엔진 (MVP용)
         """
-        base_score = 100
-        penalty = (self.pain_response * 5) + (abs(self.rpe - 7) * 2)
-        bonus = (self.form_accuracy * 2)
-        
-        final_score = base_score - penalty + bonus
-        self.qs_score = max(0, min(100, round(final_score, 1)))
-        
-        if self.pain_response >= 7 or self.qs_score < 40:
-            self.route = 'BLOCK'
-        elif self.pain_response >= 4 or self.qs_score < 70:
-            self.route = 'REVIEW'
-        else:
-            self.route = 'AUTO'
+        self.qs_score = calculate_qs(
+            self.form_accuracy,
+            self.pain_response,
+            self.rpe,
+            self.qc_score,
+        )
+        self.jatc_score = calculate_jatc(
+            self.posture_score or (self.form_accuracy * 10),
+            self.lifestyle_score,
+            self.function_training_score or self.qs_score,
+        )
+        self.route = route_session(self.qs_score, self.pain_response, self.qc_status)
+        self.safety_notice = SAFETY_NOTICE
         self.save()
 
 

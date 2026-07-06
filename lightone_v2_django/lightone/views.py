@@ -9,7 +9,7 @@ def dashboard(request):
 
 def report_detail(request, pk):
     session = get_object_or_404(MemberSession, pk=pk)
-    return render(request, 'lightone/report_detail.html', {'session': session})
+    return render(request, 'lightone/report_detail.html', {'session': session, 'safety_notice': session.safety_notice})
 
 
 def method(request):

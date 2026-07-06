@@ -15,7 +15,7 @@
 |---|--------|-----------|------|
 | 1 | `H_dashboard_v1.png` | `H_dashboard1.png` | 트레이너 피드백 대시보드 — 부위별 피드백, 추천 운동, 바디 스코어 추이, 다음 일정 |
 | 2 | `H_dashboard_v2.png` | `H_dashboard_2v.png` | 나의 PT 리포트 (웹+모바일) — v1 레이아웃 개선, 모바일 뷰 병행 표시 |
-| 3 | `H_dashboard_detail_v1.png` | `H_dashbord2.png` | 식단·개인운동·생활코칭 리포트 — 식단 요약, 식단 가이드, 개인운동 처방, 트레이너 피드백, 컨디션 기록 |
+| 3 | `H_dashboard_detail_v1.png` | `H_dashbord2.png` | 식단·개인운동·생활코칭 리포트 — 식단 요약, 식단 가이드, 개인운동 제안, 트레이너 피드백, 컨디션 기록 |
 | 4 | `H_dashboard_multi_client_v1.png` | `H_dashborad3.png` | 나의 생활코칭 리포트 — 종합 점수 82/100, 체형 변화 비교(전후), 점수 구성 요약, 변화 추이 8주 |
 | 5 | `H_dashboard_center_mgmt_v1.png` | `H_dashborad_4.png` | 나의 체형분석 리포트 — 주요 체형 지표(체지방률·골격근량·BMI·체중), 영역별 점수, 4주 변화 추이 4개 차트 |
 

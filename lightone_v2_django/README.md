@@ -56,11 +56,38 @@ python -m pip install -r requirements.txt
 python manage.py migrate
 python manage.py seed_lightone
 
+# 선택: 비식별 합성 fixture 로드
+python manage.py loaddata synthetic_step1
+
 # 4. 서버 실행
 python manage.py runserver
 ```
 
 브라우저에서 `http://127.0.0.1:8000/lightone/` 접속
+
+---
+
+## 비식별 합성 fixture 로드
+
+`lightone/fixtures/synthetic_step1.json`은 개발·검증용 합성 데이터입니다. 직접 식별정보인 이름, 전화번호, 이메일, 주소, 생년월일을 포함하지 않으며, 회원 코드는 실제 인물을 나타내지 않는 비식별 코드입니다.
+
+포함 범위:
+
+- 합성 회원 3명
+- 회원별 세션 1~2개
+- 각 세션의 QS/JATC 및 라우팅 지표 예시
+- `AUTO`, `REVIEW`, `BLOCK` 라우팅 예시 전체
+- `age_group`, `gender`, `goals`, 동의 여부 예시값
+
+로드 방법:
+
+```bash
+cd lightone_v2_django
+python manage.py migrate
+python manage.py loaddata synthetic_step1
+```
+
+> fixture는 현재 Django 모델의 필드명에 맞춰 `route` 필드에 라우팅 값을 저장합니다. 문서와 데이터 메모에서는 새 지표 용어인 `routing_status`를 함께 표기합니다.
 
 ---
 

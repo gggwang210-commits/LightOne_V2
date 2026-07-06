@@ -1189,3 +1189,24 @@ body::before {
 :where(a, button) {
   min-height: 44px;
 }
+
+.global-safety-notice,
+.notice.compact-notice {
+  border: 1px solid rgba(31, 111, 255, 0.22);
+  background: rgba(31, 111, 255, 0.08);
+  border-radius: 14px;
+  color: #16437a;
+  font-weight: 700;
+  margin-bottom: 18px;
+  padding: 14px 16px;
+}
+
+.chart-panel { margin-top: 22px; }
+.recent-session-table { margin-top: 22px; overflow-x: auto; }
+.recent-session-table table { border-collapse: collapse; width: 100%; }
+.recent-session-table th,
+.recent-session-table td { border-bottom: 1px solid var(--line); padding: 12px; text-align: left; }
+.route-pill { border-radius: 999px; display: inline-block; font-weight: 800; padding: 4px 10px; }
+.route-auto { background: rgba(39, 174, 96, 0.14); color: #1e8449; }
+.route-review { background: rgba(242, 153, 74, 0.18); color: #9a5b12; }
+.route-block { background: rgba(235, 87, 87, 0.16); color: #b83232; }

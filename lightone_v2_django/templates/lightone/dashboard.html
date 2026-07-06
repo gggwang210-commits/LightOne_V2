@@ -108,7 +108,15 @@
 
   <div class="notice">
     <b>ⓘ Safety Boundary</b>
-    이 화면은 진단·치료 목적이 아니라 PT 상담과 웰니스 피드백을 위한 프로토타입입니다.
+    {{ safety_notice }}
+  </div>
+
+  <div class="panel-card chart-panel">
+    <div class="panel-head">
+      <h3>QS 추세</h3>
+      <small>최근 세션 기준</small>
+    </div>
+    <canvas id="qsTrendChart" height="120"></canvas>
   </div>
 </section>
 
@@ -119,6 +127,7 @@
       <small>상담 판단 보조 지표</small>
     </div>
 
+    <canvas id="analysisBarsChart" height="140"></canvas>
     {% for item in feature_importance %}
     <div class="bar-row">
       <span>{{ item.name }}</span>
@@ -187,7 +196,41 @@
     </a>
     {% endfor %}
   </div>
+
+  <div class="panel-card recent-session-table">
+    <h3>최근 세션</h3>
+    <table>
+      <thead><tr><th>회원</th><th>QS</th><th>JATC</th><th>QC</th><th>경로</th></tr></thead>
+      <tbody>
+        {% for s in sessions|slice:":5" %}
+        <tr>
+          <td>{{ s.member_name }}</td>
+          <td>{{ s.qs_score }}</td>
+          <td>{{ s.jatc_score }}</td>
+          <td>{{ s.qc_status }}</td>
+          <td><span class="route-pill route-{{ s.route|lower }}">{{ s.route }}</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </section>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const qsTrend = {{ qs_trend|safe }};
+  const featureImportance = {{ feature_importance|safe }};
+  new Chart(document.getElementById('qsTrendChart'), {
+    type: 'line',
+    data: { labels: qsTrend.map((item) => item.label), datasets: [{ label: 'QS', data: qsTrend.map((item) => item.score), borderColor: '#1f6fff', tension: 0.35 }] },
+    options: { responsive: true, scales: { y: { min: 0, max: 100 } } }
+  });
+  new Chart(document.getElementById('analysisBarsChart'), {
+    type: 'bar',
+    data: { labels: featureImportance.map((item) => item.name), datasets: [{ label: '기여도', data: featureImportance.map((item) => item.value), backgroundColor: '#69b7ff' }] },
+    options: { responsive: true, scales: { y: { min: 0, max: 1 } } }
+  });
+</script>
 
 <section id="priority" class="section-block">
   <div class="section-title">

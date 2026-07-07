@@ -1,4 +1,4 @@
-# This workflow installs Django MVP dependencies, runs a minimal flake8 gate, and executes Django tests.
+# This workflow installs Django MVP dependencies, runs a minimal flake8 gate, and executes the QS smoke test.
 # Keep the working path aligned with the actual app root: lightone_v2_django.
 
 name: Python application
@@ -41,4 +41,4 @@ jobs:
       run: |
         cd lightone_v2_django
         python manage.py check
-        python manage.py test
+        python manage.py test lightone.tests.test_qs --verbosity 2

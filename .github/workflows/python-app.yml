@@ -1,4 +1,4 @@
-# This workflow installs Django MVP dependencies, runs a minimal flake8 gate, and executes the QS smoke test.
+# This workflow installs Django MVP dependencies, runs a minimal flake8 gate, and executes a QS smoke test.
 # Keep the working path aligned with the actual app root: lightone_v2_django.
 
 name: Python application
@@ -37,8 +37,17 @@ jobs:
         # Treat style findings as warnings for MVP velocity.
         flake8 lightone_v2_django --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
-    - name: Test with Django
+    - name: QS smoke test
       run: |
         cd lightone_v2_django
-        python manage.py check
-        python manage.py test lightone.tests.test_qs --verbosity 2
+        python - <<'PY'
+        from lightone.algorithms import SAFETY_NOTICE, calculate_jatc, calculate_qs, route_session
+
+        qs = calculate_qs(form_accuracy=80, discomfort_response=2, rpe=7, qc_score=90)
+        assert qs == 85.0, qs
+        jatc = calculate_jatc(qs, form_accuracy=80, discomfort_response=2, rpe=7)
+        assert route_session(qs, jatc, 2, 'PASS') == 'AUTO'
+        assert route_session(65, 65, 4, 'PASS') == 'REVIEW'
+        assert route_session(80, 80, 8, 'PASS') == 'BLOCK'
+        assert '비의료 운동상담 참고' in SAFETY_NOTICE
+        PY

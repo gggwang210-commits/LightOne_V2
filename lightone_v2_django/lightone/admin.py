@@ -1,32 +1,36 @@
 from django.contrib import admin
-from .models import Indicator, Member, MemberSession, Session, StrategyItem
+
+from .models import MemberSession, StrategyItem
+
 
 @admin.register(MemberSession)
 class MemberSessionAdmin(admin.ModelAdmin):
-    list_display = ('member_name', 'trainer_name', 'qs_score', 'jatc_score', 'route', 'qc_status', 'created_at')
-    list_filter = ('route', 'qc_status')
+    list_display = (
+        'member_name',
+        'trainer_name',
+        'qs_score',
+        'jatc_score',
+        'route',
+        'qc_status',
+        'created_at',
+    )
+    list_filter = ('route', 'qc_status', 'created_at')
+    search_fields = ('member_name', 'trainer_name', 'goal', 'discomfort_area')
+    readonly_fields = (
+        'qs_score',
+        'jatc_score',
+        'qs_form_component',
+        'qs_discomfort_component',
+        'qs_rpe_component',
+        'qs_qc_component',
+        'safety_notice',
+        'route',
+        'created_at',
+    )
 
-
-@admin.register(Member)
-class MemberAdmin(admin.ModelAdmin):
-    list_display = ('synthetic_id', 'display_label', 'goal', 'status', 'created_at')
-    list_filter = ('status', 'consent_status')
-    search_fields = ('synthetic_id', 'display_label', 'goal')
-
-
-@admin.register(Session)
-class SessionAdmin(admin.ModelAdmin):
-    list_display = ('session_id', 'member', 'exercise_name', 'session_date', 'rpe', 'pain_response', 'route', 'qc_status')
-    list_filter = ('route', 'qc_status', 'session_date')
-    search_fields = ('session_id', 'member__synthetic_id', 'member__display_label', 'exercise_name')
-
-
-@admin.register(Indicator)
-class IndicatorAdmin(admin.ModelAdmin):
-    list_display = ('session', 'qs_score', 'jatc_score', 'review_signal', 'counseling_priority', 'report_status', 'trainer_confirmed')
-    list_filter = ('review_signal', 'report_status', 'trainer_confirmed')
 
 @admin.register(StrategyItem)
 class StrategyItemAdmin(admin.ModelAdmin):
     list_display = ('title', 'category', 'priority', 'status')
     list_filter = ('category', 'priority', 'status')
+    search_fields = ('title', 'category', 'output', 'risk')

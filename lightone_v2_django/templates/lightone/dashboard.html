@@ -1,0 +1,285 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}LIGHT ONE Premium Dashboard{% endblock %}
+
+{% block content %}
+<section class="hero-card image-hero">
+  <div class="hero-copy">
+    <span class="eyebrow">LIGHT ONE MVP · PT REPORT OS</span>
+
+    <h1>
+      운동 데이터를<br>
+      상담 가능한 리포트로 바꾸는 <em>AI 웹 대시보드</em>
+    </h1>
+
+    <p>
+      운동 기록, 통증 반응, 촬영 QC, 상담 메모를 하나의 흐름으로 구조화해
+      트레이너가 재등록 상담과 컨디셔닝 안내에 바로 활용할 수 있도록 정리합니다.
+    </p>
+
+    <div class="hero-tags">
+      <span>Non-medical</span>
+      <span>Human-in-the-loop</span>
+      <span>QS / JATC Engine</span>
+    </div>
+  </div>
+
+  <div class="hero-visual" aria-label="LIGHT ONE tablet dashboard preview">
+    <img src="{% static 'lightone/img/dashbord.png' %}" alt="LIGHT ONE dashboard on tablet">
+  </div>
+
+  <div class="score-card">
+    <span>QS 평균 점수</span>
+    <strong>{{ avg_qs }}</strong>
+    <small>AUTO / REVIEW / BLOCK</small>
+    <div class="score-ring"><b></b></div>
+  </div>
+</section>
+
+<section class="section-block asset-summary">
+  <div class="section-title">
+    <span>00</span>
+    <h2>이미지 소스 분석 반영</h2>
+  </div>
+  <div class="asset-grid">
+    <article class="asset-card wide">
+      <img src="{% static 'lightone/img/healthcare_main_gym.png' %}" alt="blue wellness background">
+      <div>
+        <strong>메인 배경</strong>
+        <small>하늘빛·스카이톤 기반의 운동상담 / 웰니스 SaaS 무드</small>
+      </div>
+    </article>
+    <article class="asset-card">
+      <img src="{% static 'lightone/img/one.png' %}" alt="joint analysis visual">
+      <div>
+        <strong>관절 분석</strong>
+        <small>인체 관절·움직임 분석 콘셉트</small>
+      </div>
+    </article>
+    <article class="asset-card">
+      <img src="{% static 'lightone/img/time.png' %}" alt="wearable conditioning dashboard">
+      <div>
+        <strong>컨디션 기록</strong>
+        <small>운동시간·컨디션 기록 콘셉트</small>
+      </div>
+    </article>
+    <article class="asset-card">
+      <img src="{% static 'lightone/img/11_01_dotted_wave_pattern.png' %}" alt="conditioning data pattern">
+      <div>
+        <strong>컨디셔닝 패턴</strong>
+        <small>운동상담 데이터 흐름을 보조 그래픽으로 사용</small>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section id="progress" class="section-block">
+  <div class="section-title">
+    <span>01</span>
+    <h2>진행 현황</h2>
+  </div>
+
+  <div class="metric-grid">
+    <article class="metric-card">
+      <span>전체 세션</span>
+      <strong>{{ total }}</strong>
+      <small>관찰 중인 데이터</small>
+    </article>
+
+    <article class="metric-card accent-green">
+      <span>AUTO</span>
+      <strong>{{ counts.AUTO }}</strong>
+      <small>자동 리포트 가능</small>
+    </article>
+
+    <article class="metric-card accent-yellow">
+      <span>REVIEW</span>
+      <strong>{{ counts.REVIEW }}</strong>
+      <small>트레이너 검토</small>
+    </article>
+
+    <article class="metric-card accent-red">
+      <span>BLOCK</span>
+      <strong>{{ counts.BLOCK }}</strong>
+      <small>운동 중단 권고</small>
+    </article>
+  </div>
+
+  <div class="notice">
+    <b>ⓘ Safety Boundary</b>
+    {{ safety_notice }} · 이 화면은 PT 상담과 웰니스 피드백을 위한 프로토타입입니다.
+  </div>
+</section>
+
+
+<section id="charts" class="section-block two-col">
+  <div class="panel-card">
+    <div class="panel-head"><h3>QS 추이 선 그래프</h3><small>{{ safety_notice }}</small></div>
+    {{ chart_labels|json_script:"chart-labels" }}
+    {{ chart_qs|json_script:"chart-qs" }}
+    <canvas id="qsTrendChart" height="150"></canvas>
+  </div>
+  <div class="panel-card">
+    <div class="panel-head"><h3>QS Breakdown 바 차트</h3><small>0.4 / 0.3 / 0.2 / 0.1 가중 평균</small></div>
+    <canvas id="qsBreakdownChart" height="150"></canvas>
+  </div>
+</section>
+
+<section id="analysis" class="section-block two-col">
+  <div class="panel-card feature-panel">
+    <div class="panel-head">
+      <h3>Feature Importance Top 6</h3>
+      <small>상담 판단 보조 지표</small>
+    </div>
+
+    <canvas id="analysisBarsChart" height="140"></canvas>
+    {% for item in feature_importance %}
+    <div class="bar-row">
+      <span>{{ item.name }}</span>
+      <div>
+        <i style="width: {% widthratio item.value 1 100 %}%"></i>
+      </div>
+      <b>{{ item.value }}</b>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="panel-card visual-route-panel">
+    <div class="panel-head">
+      <h3>위험 라우팅</h3>
+      <small>Human review gate</small>
+    </div>
+
+    <div class="route-grid">
+      <div>
+        <span>AUTO</span>
+        <strong class="green">{{ counts.AUTO }}</strong>
+        <small>자동 리포트</small>
+      </div>
+
+      <div>
+        <span>REVIEW</span>
+        <strong class="yellow">{{ counts.REVIEW }}</strong>
+        <small>트레이너 확인</small>
+      </div>
+
+      <div>
+        <span>BLOCK</span>
+        <strong class="red">{{ counts.BLOCK }}</strong>
+        <small>운동 중단 안내</small>
+      </div>
+    </div>
+
+    <p class="muted">
+      불편감 반응이 높거나 촬영 QC가 낮으면 REVIEW/BLOCK으로 분류하여
+      트레이너 확인 흐름으로 넘깁니다. AI는 최종 판단자가 아니라 상담 보조 레이어입니다.
+    </p>
+  </div>
+</section>
+
+<section id="reports" class="section-block">
+  <div class="section-title">
+    <span>03</span>
+    <h2>AI 상담 리포트 미리보기</h2>
+  </div>
+
+  <div class="report-grid">
+    {% for s in sessions %}
+    <a class="report-card route-{{ s.route|lower }}" href="{% url 'lightone:report_detail' s.pk %}">
+      <div class="report-top">
+        <strong>{{ s.member_name }}</strong>
+        <span>{{ s.route }}</span>
+      </div>
+
+      <p>{{ s.goal }}</p>
+
+      <div class="report-kpis">
+        <b>QS {{ s.qs_score }}</b>
+        <b>JATC {{ s.jatc_score }}</b>
+        <b>QC {{ s.qc_status }}</b>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+
+  <div class="panel-card recent-table-card">
+    <h3>최근 세션 목록</h3>
+    <table class="recent-table">
+      <thead><tr><th>회원</th><th>목표</th><th>QS</th><th>JATC</th><th>라우팅</th></tr></thead>
+      <tbody>{% for s in sessions|slice:":6" %}<tr><td>{{ s.member_name }}</td><td>{{ s.goal }}</td><td>{{ s.qs_score }}</td><td>{{ s.jatc_score }}</td><td><span class="route-pill route-{{ s.route|lower }}">{{ s.route }}</span></td></tr>{% endfor %}</tbody>
+    </table>
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const qsTrend = {{ qs_trend|safe }};
+  const featureImportance = {{ feature_importance|safe }};
+  new Chart(document.getElementById('qsTrendChart'), {
+    type: 'line',
+    data: { labels: qsTrend.map((item) => item.label), datasets: [{ label: 'QS', data: qsTrend.map((item) => item.score), borderColor: '#1f6fff', tension: 0.35 }] },
+    options: { responsive: true, scales: { y: { min: 0, max: 100 } } }
+  });
+  new Chart(document.getElementById('analysisBarsChart'), {
+    type: 'bar',
+    data: { labels: featureImportance.map((item) => item.name), datasets: [{ label: '기여도', data: featureImportance.map((item) => item.value), backgroundColor: '#69b7ff' }] },
+    options: { responsive: true, scales: { y: { min: 0, max: 1 } } }
+  });
+</script>
+
+<section id="priority" class="section-block">
+  <div class="section-title">
+    <span>04</span>
+    <h2>사업 우선순위</h2>
+  </div>
+
+  <div class="strategy-list">
+    {% for item in strategy_items %}
+    <article>
+      <div>
+        <strong>{{ item.title }}</strong>
+        <small>{{ item.category }} · {{ item.priority }} · {{ item.status }}</small>
+      </div>
+      <p>{{ item.output }}</p>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+
+<section id="roadmap" class="section-block roadmap-card">
+  <div class="section-title">
+    <span>05</span>
+    <h2>로드맵 진행률</h2>
+  </div>
+
+  <div class="roadmap-grid">
+    <div>
+      <b>01</b>
+      <strong>상담 리포트 MVP</strong>
+      <span>회원 기록 · QS · 라우팅</span>
+    </div>
+
+    <div>
+      <b>02</b>
+      <strong>센터 파일럿</strong>
+      <span>PT샵 1~2곳 업무 흐름 검증</span>
+    </div>
+
+    <div>
+      <b>03</b>
+      <strong>교육·인증 IP</strong>
+      <span>트레이너 컨디셔닝 프로토콜</span>
+    </div>
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const chartLabels = JSON.parse(document.getElementById('chart-labels').textContent);
+const chartQs = JSON.parse(document.getElementById('chart-qs').textContent);
+new Chart(document.getElementById('qsTrendChart'), {type:'line', data:{labels:chartLabels, datasets:[{label:'QS', data:chartQs, borderColor:'#1f6fff', backgroundColor:'rgba(31,111,255,.12)', tension:.35, fill:true}]}, options:{responsive:true, scales:{y:{min:0,max:100}}}});
+new Chart(document.getElementById('qsBreakdownChart'), {type:'bar', data:{labels:['폼 0.4','불편감 0.3','RPE 0.2','QC 0.1'], datasets:[{label:'Weight', data:[40,30,20,10], backgroundColor:['#1f6fff','#1ed6a3','#f5a400','#91a0b7']}]}, options:{responsive:true, scales:{y:{min:0,max:50}}}});
+</script>
+
+{% endblock %}

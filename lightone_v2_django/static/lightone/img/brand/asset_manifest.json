@@ -1,0 +1,70 @@
+{
+  "project": "LIGHTONE V2",
+  "purpose": "Brand and product visual source assets for Django MVP, landing page, portfolio, and presentation use.",
+  "non_medical_positioning": "Use as non-medical PT consultation support SaaS visuals only.",
+  "assets": [
+    {
+      "slug": "studio-interior-night-blue",
+      "file": "studio-interior-night-blue.webp",
+      "repo_path": "lightone_v2_django/static/lightone/img/brand/studio-interior-night-blue.webp",
+      "category": "hero/background",
+      "recommended_use": "Django landing page dark hero/background"
+    },
+    {
+      "slug": "dashboard-icon-set",
+      "file": "dashboard-icon-set.webp",
+      "repo_path": "lightone_v2_django/static/lightone/img/brand/dashboard-icon-set.webp",
+      "category": "icon/source",
+      "recommended_use": "Reference source for sidebar/dashboard icon style; not final UI icon sprite"
+    },
+    {
+      "slug": "studio-interior-day",
+      "file": "studio-interior-day.webp",
+      "repo_path": "lightone_v2_django/static/lightone/img/brand/studio-interior-day.webp",
+      "category": "landing/hero",
+      "recommended_use": "Landing page premium day hero"
+    },
+    {
+      "slug": "studio-interior-night-warm",
+      "file": "studio-interior-night-warm.webp",
+      "repo_path": "lightone_v2_django/static/lightone/img/brand/studio-interior-night-warm.webp",
+      "category": "landing/hero",
+      "recommended_use": "Landing page premium night hero"
+    },
+    {
+      "slug": "studio-interior-night-blue-alt",
+      "file": "studio-interior-night-blue-alt.webp",
+      "repo_path": "lightone_v2_django/static/lightone/img/brand/studio-interior-night-blue-alt.webp",
+      "category": "background",
+      "recommended_use": "Dark premium SaaS hero or section background"
+    },
+    {
+      "slug": "trainer-feedback-dashboard",
+      "file": "trainer-feedback-dashboard.webp",
+      "repo_path": "lightone_v2_django/static/lightone/img/brand/trainer-feedback-dashboard.webp",
+      "category": "dashboard/mockup",
+      "recommended_use": "Portfolio/mockup preview of member feedback report UI"
+    },
+    {
+      "slug": "ai-fitness-overlay-bg",
+      "file": "ai-fitness-overlay-bg.webp",
+      "repo_path": "lightone_v2_django/static/lightone/img/brand/ai-fitness-overlay-bg.webp",
+      "category": "background",
+      "recommended_use": "AI analytics visual section background"
+    },
+    {
+      "slug": "network-abstract-bg",
+      "file": "network-abstract-bg.webp",
+      "repo_path": "lightone_v2_django/static/lightone/img/brand/network-abstract-bg.webp",
+      "category": "background",
+      "recommended_use": "Data architecture/RAG/AI section background"
+    },
+    {
+      "slug": "studio-exterior-day",
+      "file": "studio-exterior-day.webp",
+      "repo_path": "lightone_v2_django/static/lightone/img/brand/studio-exterior-day.webp",
+      "category": "landing/exterior",
+      "recommended_use": "Brand story or studio concept exterior visual"
+    }
+  ]
+}

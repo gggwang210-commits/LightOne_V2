@@ -7,6 +7,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ("lightone", "0003_member_session_indicator"),
+        ("lightone", "0003_membersession_qc_score_and_more"),
     ]
 
     operations = [

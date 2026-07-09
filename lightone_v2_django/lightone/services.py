@@ -1,8 +1,35 @@
-from .models import MemberSession, StrategyItem
+import json
+
+from django.core.exceptions import ValidationError
+
+ROUTING_BADGE_CLASSES = {
+    'AUTO': 'badge-green',
+    'GREEN': 'badge-green',
+    'REVIEW': 'badge-yellow',
+    'YELLOW': 'badge-yellow',
+    'BLOCK': 'badge-red',
+    'RED': 'badge-red',
+}
+
+
+def routing_label(route):
+    return str(route or '').strip()
+
+
+def routing_badge_class(route):
+    normalized_route = routing_label(route).upper()
+    return ROUTING_BADGE_CLASSES.get(normalized_route, 'badge-gray')
+
+
+def enrich_routing_badges(sessions):
+    for session in sessions:
+        session.routing_label = routing_label(session.route)
+        session.routing_badge_class = routing_badge_class(session.route)
+    return sessions
 
 
 def dashboard_context():
-    sessions = list(MemberSession.objects.all())
+    sessions = enrich_routing_badges(list(MemberSession.objects.all()))
     total = len(sessions)
     if total:
         avg_qs = round(sum(s.qs_score for s in sessions) / total, 1)
@@ -25,6 +52,7 @@ def dashboard_context():
 
     context = {
         'sessions': sessions,
+        'recent_sessions': sessions,
         'strategy_items': StrategyItem.objects.all()[:6],
         'total': total,
         'avg_qs': avg_qs,
@@ -32,5 +60,9 @@ def dashboard_context():
         'counts': counts,
         'qc_counts': qc_counts,
         'feature_importance': feature_importance,
+        'qs_labels': qs_labels,
+        'qs_scores': qs_scores,
+        'breakdown_labels': breakdown_labels,
+        'breakdown_values': breakdown_values,
     }
     return context

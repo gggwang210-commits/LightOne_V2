@@ -28,10 +28,6 @@ class MemberSession(models.Model):
     qs_score = models.FloatField(default=0)
     jatc_score = models.FloatField(default=0, help_text='비의료 운동상담 참고용 JATC 점수입니다.')
     form_accuracy = models.FloatField(default=0)
-    qc_score = models.FloatField(default=100)
-    posture_score = models.FloatField(default=0)
-    lifestyle_score = models.FloatField(default=0)
-    function_training_score = models.FloatField(default=0)
     pain_response = models.FloatField(default=0)
     rpe = models.FloatField(default=0)
     qs_form_component = models.FloatField(default=0)
@@ -41,9 +37,6 @@ class MemberSession(models.Model):
     route = models.CharField(max_length=10, choices=ROUTE_CHOICES, default='AUTO')
     qc_status = models.CharField(max_length=10, choices=QC_CHOICES, default='PASS')
     memo = models.TextField(blank=True)
-    review_note = models.TextField(blank=True)
-    safety_notice = models.TextField(default=SAFETY_NOTICE)
-    trainer_confirmed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -149,7 +142,14 @@ class Indicator(models.Model):
         ('HELD', 'Held'),
     ]
 
-    session = models.OneToOneField(Session, on_delete=models.CASCADE, related_name='indicator')
+    session = models.OneToOneField(Session, on_delete=models.CASCADE, related_name='indicator', null=True, blank=True)
+    member_session = models.OneToOneField(
+        MemberSession,
+        on_delete=models.CASCADE,
+        related_name='indicator',
+        null=True,
+        blank=True,
+    )
     posture_score = models.FloatField(default=0)
     lifestyle_score = models.FloatField(default=0)
     rep_achievement_rate = models.FloatField(default=0)
@@ -170,6 +170,10 @@ class Indicator(models.Model):
         ordering = ['-qs_score', 'session__session_id']
 
     def __str__(self):
+        if self.member_session_id:
+            return f'{self.member_session.member_name} indicator'
+        if not self.session_id:
+            return 'Unlinked indicator'
         return f'{self.session.session_id} indicator'
 
 
@@ -183,3 +187,24 @@ class StrategyItem(models.Model):
 
     def __str__(self):
         return self.title
+
+
+@receiver(post_save, sender=MemberSession)
+def sync_member_session_indicator(sender, instance, **kwargs):
+    """Create or update the non-medical indicator snapshot when a member session is saved."""
+    Indicator.objects.update_or_create(
+        member_session=instance,
+        defaults={
+            'posture_score': instance.posture_score,
+            'lifestyle_score': instance.lifestyle_score,
+            'pain_score': instance.pain_response,
+            'function_training_score': instance.function_training_score,
+            'qs_score': instance.qs_score,
+            'jatc_score': instance.jatc_score,
+            'review_signal': instance.route,
+            'review_note': instance.review_note,
+            'trainer_confirmed': instance.trainer_confirmed,
+            'report_status': 'HELD' if instance.route == 'BLOCK' else 'READY',
+            'counseling_priority': 1 if instance.route == 'BLOCK' else 2 if instance.route == 'REVIEW' else 3,
+        },
+    )

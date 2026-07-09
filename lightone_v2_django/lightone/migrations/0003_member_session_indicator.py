@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("lightone", "0002_membersession_member_membersession_trainer"),
+        ("lightone", "0003_membersession_qc_score_and_more"),
     ]
 
     operations = [

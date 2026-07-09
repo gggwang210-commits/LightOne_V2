@@ -1,8 +1,9 @@
 import uuid
 
+from django.db import models
+
 from .algorithms import SAFETY_NOTICE, calculate_jatc, calculate_qs, route_session
 from accounts.models import MemberProfile, TrainerProfile
-from .algorithms import SAFETY_NOTICE, calculate_jatc, calculate_qs, route_session
 
 
 class Member(models.Model):
@@ -147,8 +148,19 @@ class MemberSession(models.Model):
     def __str__(self):
         return f'{self.member_name} - {self.route}'
 
+    QS_ROUTE_CALCULATED_FIELDS = {
+        'qs_form_component',
+        'qs_discomfort_component',
+        'qs_rpe_component',
+        'qs_qc_component',
+        'qs_score',
+        'jatc_score',
+        'route',
+        'safety_notice',
+    }
+
     def calculate_qs_and_route(self):
-        """Calculate MVP QS/JATC scores and non-medical trainer review routing."""
+        """Calculate MVP QS/JATC scores and non-medical trainer review routing in memory."""
         self.qs_form_component = self.form_accuracy * 10 if self.form_accuracy <= 10 else self.form_accuracy
         self.qs_discomfort_component = 100 - (self.pain_response * 10)
         self.qs_rpe_component = 100 - (abs(self.rpe - 7) * 10)
@@ -157,7 +169,24 @@ class MemberSession(models.Model):
         self.jatc_score = calculate_jatc(self.qs_score, self.form_accuracy, self.pain_response, self.rpe)
         self.route = route_session(self.qs_score, self.jatc_score, self.pain_response, self.qc_status)
         self.safety_notice = SAFETY_NOTICE
-        self.save()
+
+    def save(self, *args, **kwargs):
+        """Persist sessions through the shared QS/JATC calculation engine.
+
+        The calculated fields are written with ``QuerySet.update()`` after the
+        normal save so admin, forms, fixtures, and scripts all get identical
+        routing behavior without recursively calling this save override.
+        """
+        update_fields = kwargs.get('update_fields')
+        super().save(*args, **kwargs)
+
+        if update_fields is not None and set(update_fields).issubset(self.QS_ROUTE_CALCULATED_FIELDS):
+            return
+
+        self.calculate_qs_and_route()
+        type(self).objects.filter(pk=self.pk).update(
+            **{field: getattr(self, field) for field in self.QS_ROUTE_CALCULATED_FIELDS}
+        )
 
 
 class Member(models.Model):

@@ -25,7 +25,23 @@ class QsJatcAlgorithmTests(TestCase):
             rpe=7,
             qc_score=90,
         )
-        session.calculate_qs_and_route()
         self.assertEqual(session.qs_score, 85.0)
         self.assertEqual(session.route, 'AUTO')
         self.assertIn('비의료 운동상담 참고', session.safety_notice)
+
+    def test_model_recalculates_scores_on_save_update(self):
+        session = MemberSession.objects.create(
+            member_name='Synthetic Member B',
+            goal='Synthetic routing check',
+            form_accuracy=8,
+            pain_response=2,
+            rpe=7,
+            qc_score=90,
+        )
+
+        session.pain_response = 8
+        session.save(update_fields=['pain_response'])
+        session.refresh_from_db()
+
+        self.assertEqual(session.route, 'BLOCK')
+        self.assertEqual(session.qs_discomfort_component, 20)

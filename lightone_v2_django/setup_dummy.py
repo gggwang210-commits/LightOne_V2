@@ -51,6 +51,6 @@ for mp, m_name, goal, disc, form, pain, rpe, memo in sessions_data:
         rpe=rpe,
         memo=memo
     )
-    session.calculate_qs_and_route()
+    session.save()
 
 print("더미 세션 데이터 생성 완료")

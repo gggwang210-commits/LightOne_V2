@@ -33,13 +33,6 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterField(
             model_name="membersession",
-            name="safety_notice",
-            field=models.TextField(
-                default="LIGHT ONE은 비의료 운동상담 보조 도구입니다. QS/JATC와 AUTO/REVIEW/BLOCK은 PT 상담 참고 신호이며, REVIEW/BLOCK은 트레이너가 안전 신호를 확인한 뒤 진행 여부를 안내합니다."
-            ),
-        ),
-        migrations.AddField(
-            model_name="membersession",
             name="trainer_confirmed",
             field=models.BooleanField(default=False),
         ),

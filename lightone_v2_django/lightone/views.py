@@ -26,7 +26,6 @@ def session_create(request):
                 session.trainer = request.user.trainer_profile
                 session.trainer_name = request.user.name
             session.save()
-            session.calculate_qs_and_route()
             return redirect('lightone:dashboard')
     else:
         form = SessionRecordForm()

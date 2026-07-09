@@ -1,63 +1,49 @@
-"""Quality Score (QS) calculation helpers.
-
-QS uses normalized 0-100 inputs for form, rep, rest, and pain response.
-Pain response is mapped separately so the scale is explicit and reusable.
-"""
-
-PAIN_NONE_ALIASES = {'none', 'no', 'low', '없음', '낮음', '무통증'}
-PAIN_MILD_ALIASES = {'mild', 'minor', 'light', '경미', '약간'}
-PAIN_MODERATE_ALIASES = {'moderate', 'high', 'severe', '중간', '중간 이상', '높음', '심함'}
+from lightone.algorithms import ROUTE_AUTO, ROUTE_BLOCK, ROUTE_REVIEW
 
 
-def clamp(value, minimum=0, maximum=100):
-    """Clamp a numeric value into the inclusive 0-100 scoring range."""
-    return max(minimum, min(maximum, float(value)))
+def _has_safety_flags(safety_flags=None):
+    if safety_flags is None:
+        return False
+    if isinstance(safety_flags, str):
+        return bool(safety_flags.strip())
+    if isinstance(safety_flags, dict):
+        return any(bool(value) for value in safety_flags.values())
+    if isinstance(safety_flags, (list, tuple, set)):
+        return any(bool(value) for value in safety_flags)
+    return bool(safety_flags)
 
 
-def normalize_score(value):
-    """Normalize project score values: 0-10 inputs become 0-100, 0-100 pass through."""
-    value = float(value)
-    return value * 10 if value <= 10 else value
+def _is_low_or_none_pain(pain_level):
+    if pain_level is None:
+        return True
+
+    try:
+        numeric_pain = float(pain_level)
+    except (TypeError, ValueError):
+        normalized_pain = str(pain_level).strip().lower()
+        return normalized_pain in {'none', 'no', 'low', '0', '없음', '낮음'}
+
+    # Project pain scale convention for numeric inputs:
+    # 0~3 = low/none (AUTO eligible), 4~6 = mild/review, 7~10 = high/block.
+    return 0 <= numeric_pain <= 3
 
 
-def map_pain_response_score(pain_level):
-    """Map pain response into a QS contribution score.
+def _is_high_pain(pain_level):
+    try:
+        numeric_pain = float(pain_level)
+    except (TypeError, ValueError):
+        normalized_pain = str(pain_level).strip().lower()
+        return normalized_pain in {'high', 'severe', 'block', '높음', '심함'}
 
-    Project data uses 0-10 pain response values in forms and fixtures. The QS
-    pain contribution is intentionally coarse:
-    - none/low/0: 100 points
-    - mild numeric response 1-3 or '경미': 50 points
-    - moderate or higher numeric response >=4 or '중간 이상': 0 points
-    """
-    if pain_level is None or pain_level == '':
-        return 100.0
-
-    if isinstance(pain_level, str):
-        normalized = pain_level.strip().lower()
-        if normalized in PAIN_NONE_ALIASES:
-            return 100.0
-        if normalized in PAIN_MILD_ALIASES:
-            return 50.0
-        if normalized in PAIN_MODERATE_ALIASES:
-            return 0.0
-        try:
-            pain_level = float(normalized)
-        except ValueError:
-            return 0.0
-
-    pain_value = float(pain_level)
-    if pain_value <= 0:
-        return 100.0
-    if pain_value <= 3:
-        return 50.0
-    return 0.0
+    # Project pain scale convention for numeric inputs:
+    # 0~3 = low/none (AUTO eligible), 4~6 = mild/review, 7~10 = high/block.
+    return numeric_pain >= 7
 
 
-def calculate_qs(form, rep, rest, pain_level):
-    """Calculate QS = Form*0.4 + Rep*0.3 + Rest*0.2 + Pain*0.1."""
-    form_score = clamp(normalize_score(form))
-    rep_score = clamp(normalize_score(rep))
-    rest_score = clamp(normalize_score(rest))
-    pain_score = clamp(map_pain_response_score(pain_level))
-    score = (form_score * 0.4) + (rep_score * 0.3) + (rest_score * 0.2) + (pain_score * 0.1)
-    return round(clamp(score), 1)
+def determine_routing(qs_score, pain_level, safety_flags=None):
+    """Determine non-medical routing from QS, pain level, and safety flags."""
+    if _has_safety_flags(safety_flags) or _is_high_pain(pain_level):
+        return ROUTE_BLOCK
+    if float(qs_score) >= 80 and _is_low_or_none_pain(pain_level):
+        return ROUTE_AUTO
+    return ROUTE_REVIEW

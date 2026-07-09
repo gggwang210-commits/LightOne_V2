@@ -1,1 +1,1 @@
-"""Utility modules for LightOne scoring and routing."""
+"""Utility helpers for LightOne scoring and routing."""

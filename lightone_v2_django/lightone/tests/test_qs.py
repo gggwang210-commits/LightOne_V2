@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.utils import timezone
 
 from lightone.algorithms import calculate_jatc, calculate_qs, route_session
-from lightone.utils.qs_calculator import map_pain_response_score
+from lightone.utils.qs_calculator import determine_routing
 from lightone.models import MemberSession
 
 
@@ -18,12 +18,12 @@ class QsJatcAlgorithmTests(TestCase):
         self.assertEqual(route_session(65, 65, 4, 'PASS'), 'REVIEW')
         self.assertEqual(route_session(80, 80, 8, 'PASS'), 'BLOCK')
 
-    def test_pain_mapping_is_explicit(self):
-        self.assertEqual(map_pain_response_score(0), 100.0)
-        self.assertEqual(map_pain_response_score("low"), 100.0)
-        self.assertEqual(map_pain_response_score("경미"), 50.0)
-        self.assertEqual(map_pain_response_score(3), 50.0)
-        self.assertEqual(map_pain_response_score(4), 0.0)
+    def test_determine_routing_prioritizes_safety_and_pain_scale(self):
+        self.assertEqual(determine_routing(95, 1, safety_flags=['manual_stop']), 'BLOCK')
+        self.assertEqual(determine_routing(95, 8), 'BLOCK')
+        self.assertEqual(determine_routing(80, 3), 'AUTO')
+        self.assertEqual(determine_routing(95, 4), 'REVIEW')
+        self.assertEqual(determine_routing(79, 'none'), 'REVIEW')
 
     def test_model_calculates_scores_and_notice(self):
         session = MemberSession.objects.create(

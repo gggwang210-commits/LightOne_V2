@@ -6,6 +6,23 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'lightone-local-dev-key')
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'testserver']
 
+
+def env_bool(name, default=False):
+    value = os.environ.get(name)
+    if value is None:
+        return default
+    return value.strip().lower() in {'1', 'true', 'yes', 'on'}
+
+
+AI_ENABLED = env_bool('AI_ENABLED', False)
+GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY', '')
+GEMINI_REPORT_MODEL = os.environ.get('GEMINI_REPORT_MODEL', 'gemini-3.5-flash')
+GEMINI_HIGH_QUALITY_MODEL = os.environ.get(
+    'GEMINI_HIGH_QUALITY_MODEL',
+    'gemini-3.1-pro-preview',
+)
+GEMINI_TIMEOUT_SECONDS = int(os.environ.get('GEMINI_TIMEOUT_SECONDS', '20'))
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',

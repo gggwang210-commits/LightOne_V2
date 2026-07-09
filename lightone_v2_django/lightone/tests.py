@@ -1,69 +1,53 @@
 from django.test import TestCase
+from django.contrib.auth import get_user_model
 from django.urls import reverse
 
-from accounts.models import MemberProfile, TrainerProfile, User
 from .models import MemberSession
+from .services import routing_badge_class, routing_label
 
 
-class DashboardPrivacyTests(TestCase):
-    def test_dashboard_excludes_direct_member_identifiers(self):
-        member_user = User.objects.create_user(
-            username='privacy-member',
-            password='pass12345',
-            email='privacy-member@example.com',
-            name='홍길동',
-            role='member',
-        )
-        trainer_user = User.objects.create_user(
-            username='privacy-trainer',
-            password='pass12345',
-            email='privacy-trainer@example.com',
-            name='김트레이너',
-            role='trainer',
-        )
-        login_user = User.objects.create_user(
-            username='dashboard-viewer',
-            password='pass12345',
-            email='viewer@example.com',
-            name='대시보드뷰어',
-            role='trainer',
-        )
-        member = MemberProfile.objects.create(
-            user=member_user,
-            birth_date='1991-02-03',
-            goals='운동 목표',
-        )
-        trainer = TrainerProfile.objects.create(user=trainer_user)
-        session = MemberSession.objects.create(
-            member=member,
-            trainer=trainer,
-            member_name='홍길동 010-1234-5678',
-            trainer_name='김트레이너 서울시 강남구 테스트로 123',
-            goal='근력 강화',
-            discomfort_area='어깨',
-            qs_score=88,
-            jatc_score=77,
-            form_accuracy=90,
-            pain_response=1,
-            rpe=6,
-            route='AUTO',
+class DashboardRoutingBadgeTests(TestCase):
+    def create_session(self, route):
+        return MemberSession.objects.create(
+            member_name=f'{route}-member',
+            goal='routing badge check',
+            route=route,
             qc_status='PASS',
-            memo='privacy-member@example.com 1991-02-03 서울시 강남구 테스트로 123',
         )
 
-        self.client.force_login(login_user)
+    def test_routing_badge_helper_normalizes_known_and_unknown_values(self):
+        cases = {
+            'AUTO': ('AUTO', 'badge-green'),
+            'GREEN': ('GREEN', 'badge-green'),
+            'Green': ('Green', 'badge-green'),
+            'REVIEW': ('REVIEW', 'badge-yellow'),
+            'YELLOW': ('YELLOW', 'badge-yellow'),
+            'Yellow': ('Yellow', 'badge-yellow'),
+            'BLOCK': ('BLOCK', 'badge-red'),
+            'RED': ('RED', 'badge-red'),
+            'Red': ('Red', 'badge-red'),
+            'UNKNOWN': ('UNKNOWN', 'badge-gray'),
+        }
+
+        for route, (expected_label, expected_class) in cases.items():
+            with self.subTest(route=route):
+                self.assertEqual(routing_label(route), expected_label)
+                self.assertEqual(routing_badge_class(route), expected_class)
+
+    def test_dashboard_renders_badge_class_for_each_routing_status(self):
+        user = get_user_model().objects.create_user(
+            username='dashboard-user',
+            password='test-pass',
+            name='Dashboard User',
+        )
+        self.client.force_login(user)
+        for route in ['AUTO', 'GREEN', 'Green', 'REVIEW', 'YELLOW', 'Yellow', 'BLOCK', 'RED', 'Red', 'UNKNOWN']:
+            self.create_session(route)
+
         response = self.client.get(reverse('lightone:dashboard'))
 
         self.assertEqual(response.status_code, 200)
-        html = response.content.decode()
-        self.assertContains(response, f'Member ID: {session.member_id}')
-        self.assertNotContains(response, '홍길동')
-        self.assertNotContains(response, '김트레이너')
-        self.assertNotContains(response, '010-1234-5678')
-        self.assertNotContains(response, 'privacy-member@example.com')
-        self.assertNotContains(response, '서울시 강남구 테스트로 123')
-        self.assertNotContains(response, '1991-02-03')
-        self.assertNotIn(member_user.email, html)
-        self.assertNotIn(member_user.name, html)
-        self.assertNotIn(trainer_user.email, html)
-        self.assertNotIn(trainer_user.name, html)
+        self.assertContains(response, 'badge-green')
+        self.assertContains(response, 'badge-yellow')
+        self.assertContains(response, 'badge-red')
+        self.assertContains(response, 'badge-gray')

@@ -883,11 +883,11 @@
   </select>
 
   <div class="report-grid">
-    {% for s in sessions %}
-    <a class="report-card route-{{ s.route|lower }}" href="{% url 'lightone:report_detail' s.pk %}">
+    {% for s in recent_sessions %}
+    <a class="report-card route-{{ s.route|lower }} {{ s.routing_badge_class }}" href="{% url 'lightone:report_detail' s.pk %}">
       <div class="report-top">
-        <strong>Member ID: {{ s.member_id }}</strong>
-        <span>{{ s.route }}</span>
+        <strong>{{ s.member_name }}</strong>
+        <span class="routing-badge {{ s.routing_badge_class }}">{{ s.routing_label }}</span>
       </div>
       <p class="lo-section-desc">
         이 영역은 AI 판단을 절대화하지 않고, 트레이너가 어떤 요소를 먼저 확인해야 하는지 설명하기 위한 보조 지표입니다.

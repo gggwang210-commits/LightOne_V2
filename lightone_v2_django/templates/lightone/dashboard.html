@@ -169,11 +169,18 @@
     <h2>AI 상담 리포트 미리보기</h2>
   </div>
 
+  <label class="member-select-label" for="member-select">회원 선택</label>
+  <select id="member-select" class="member-select" name="member_id">
+    {% for s in sessions %}
+    <option value="{{ s.member_id }}">Member ID: {{ s.member_id }}</option>
+    {% endfor %}
+  </select>
+
   <div class="report-grid">
     {% for s in sessions %}
     <a class="report-card route-{{ s.route|lower }}" href="{% url 'lightone:report_detail' s.pk %}">
       <div class="report-top">
-        <strong>{{ s.member_name }}</strong>
+        <strong>Member ID: {{ s.member_id }}</strong>
         <span>{{ s.route }}</span>
       </div>
 

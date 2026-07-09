@@ -16,7 +16,6 @@ INSTALLED_APPS = [
     'accounts',
     'dashboard',
     'lightone',
-    'dashboard',
 ]
 
 MIDDLEWARE = [
@@ -58,7 +57,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
             ],
         },
-    },
+    }
 ]
 
 WSGI_APPLICATION = 'mysite.wsgi.application'

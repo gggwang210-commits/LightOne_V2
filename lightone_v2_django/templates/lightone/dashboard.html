@@ -170,11 +170,11 @@
   </div>
 
   <div class="report-grid">
-    {% for s in sessions %}
-    <a class="report-card route-{{ s.route|lower }}" href="{% url 'lightone:report_detail' s.pk %}">
+    {% for s in recent_sessions %}
+    <a class="report-card route-{{ s.route|lower }} {{ s.routing_badge_class }}" href="{% url 'lightone:report_detail' s.pk %}">
       <div class="report-top">
         <strong>{{ s.member_name }}</strong>
-        <span>{{ s.route }}</span>
+        <span class="routing-badge {{ s.routing_badge_class }}">{{ s.routing_label }}</span>
       </div>
 
       <p>{{ s.goal }}</p>

@@ -27,20 +27,13 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name="membersession",
-            name="qc_score",
-            field=models.FloatField(default=100),
-        ),
-        migrations.AddField(
-            model_name="membersession",
             name="review_note",
             field=models.TextField(blank=True),
         ),
-        migrations.AddField(
+        migrations.AlterField(
             model_name="membersession",
             name="safety_notice",
-            field=models.TextField(
-                default="LIGHT ONE은 비의료 운동상담 보조 도구입니다. QS/JATC와 AUTO/REVIEW/BLOCK은 진단·치료·처방이 아니며, 통증이나 이상 반응이 있으면 운동을 중단하고 전문가 상담을 권고합니다."
-            ),
+            field=models.TextField(default="비의료 운동상담 참고, 트레이너 검토 필요"),
         ),
         migrations.AddField(
             model_name="membersession",

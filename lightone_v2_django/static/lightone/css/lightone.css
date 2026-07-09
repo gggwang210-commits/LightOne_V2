@@ -1,4 +1,5 @@
 :root {
+  --font-dashboard: "Pretendard", "SUIT", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", "Inter", Arial, sans-serif;
   --bg: #f5f8fc;
   --surface: #ffffff;
   --surface-soft: #f8fbff;
@@ -36,7 +37,7 @@ html {
 
 body {
   margin: 0;
-  font-family: Inter, "Noto Sans KR", "Pretendard", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--font-dashboard);
   color: var(--text);
   background:
     radial-gradient(circle at 80% -8%, rgba(202, 225, 255, 0.8) 0, transparent 36%),
@@ -816,6 +817,26 @@ body::before {
 .route-block .report-top span {
   background: #fff0f1;
   color: #e32935;
+}
+
+.routing-badge.badge-green {
+  background: #e8fbf3;
+  color: #12845f;
+}
+
+.routing-badge.badge-yellow {
+  background: #fff7e8;
+  color: #d98500;
+}
+
+.routing-badge.badge-red {
+  background: #fff0f1;
+  color: #e32935;
+}
+
+.routing-badge.badge-gray {
+  background: #eef2f7;
+  color: #617088;
 }
 
 .report-card p {

@@ -31,7 +31,7 @@ class Migration(migrations.Migration):
             name="review_note",
             field=models.TextField(blank=True),
         ),
-        migrations.AddField(
+        migrations.AlterField(
             model_name="membersession",
             name="trainer_confirmed",
             field=models.BooleanField(default=False),

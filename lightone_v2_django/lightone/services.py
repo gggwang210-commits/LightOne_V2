@@ -23,7 +23,7 @@ def dashboard_context():
         {'name': '생활습관', 'value': 0.06},
     ]
 
-    return {
+    context = {
         'sessions': sessions,
         'strategy_items': StrategyItem.objects.all()[:6],
         'total': total,
@@ -33,3 +33,4 @@ def dashboard_context():
         'qc_counts': qc_counts,
         'feature_importance': feature_importance,
     }
+    return context

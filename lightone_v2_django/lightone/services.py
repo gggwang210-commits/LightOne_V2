@@ -93,6 +93,7 @@ def dashboard_context(member_id=None):
 
     context = {
         'sessions': sessions,
+        'recent_sessions': sessions,
         'strategy_items': StrategyItem.objects.all()[:6],
         'total': total,
         'avg_qs': avg_qs,
@@ -100,6 +101,10 @@ def dashboard_context(member_id=None):
         'counts': counts,
         'qc_counts': qc_counts,
         'feature_importance': feature_importance,
+        'qs_labels': qs_labels,
+        'qs_scores': qs_scores,
+        'breakdown_labels': breakdown_labels,
+        'breakdown_values': breakdown_values,
     }
     context.update(_member_dashboard_context(member_id))
     return context

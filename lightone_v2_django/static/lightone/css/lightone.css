@@ -1,4 +1,5 @@
 :root {
+  --font-dashboard: "Pretendard", "SUIT", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", "Inter", Arial, sans-serif;
   --bg: #f5f8fc;
   --surface: #ffffff;
   --surface-soft: #f8fbff;
@@ -36,7 +37,7 @@ html {
 
 body {
   margin: 0;
-  font-family: Inter, "Noto Sans KR", "Pretendard", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--font-dashboard);
   color: var(--text);
   background:
     radial-gradient(circle at 80% -8%, rgba(202, 225, 255, 0.8) 0, transparent 36%),
@@ -818,6 +819,26 @@ body::before {
   color: #e32935;
 }
 
+.routing-badge.badge-green {
+  background: #e8fbf3;
+  color: #12845f;
+}
+
+.routing-badge.badge-yellow {
+  background: #fff7e8;
+  color: #d98500;
+}
+
+.routing-badge.badge-red {
+  background: #fff0f1;
+  color: #e32935;
+}
+
+.routing-badge.badge-gray {
+  background: #eef2f7;
+  color: #617088;
+}
+
 .report-card p {
   color: #617088;
   min-height: 42px;
@@ -1188,4 +1209,48 @@ body::before {
 
 :where(a, button) {
   min-height: 44px;
+}
+
+.global-safety-notice,
+.safety-copy {
+  border: 1px solid rgba(245, 164, 0, 0.35);
+  background: rgba(255, 248, 230, 0.92);
+  color: #8a5a00;
+  border-radius: 14px;
+  padding: 12px 16px;
+  font-weight: 900;
+  margin-bottom: 18px;
+}
+
+.route-pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 900;
+  color: #fff;
+}
+
+.route-auto { background: var(--green); }
+.route-review { background: var(--yellow); }
+.route-block { background: var(--red); }
+
+.recent-table {
+  width: 100%;
+  border-collapse: collapse;
+  overflow: hidden;
+}
+
+.recent-table th,
+.recent-table td {
+  border-bottom: 1px solid var(--line);
+  padding: 12px 10px;
+  text-align: left;
+  font-size: 14px;
+}
+
+.recent-table th {
+  color: var(--muted);
+  font-weight: 900;
 }

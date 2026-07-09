@@ -8,5 +8,6 @@ urlpatterns = [
     path('dashboard/', dashboard, name='dashboard'),
     path('admin/', admin.site.urls),
     path('lightone/', include('lightone.urls')),
+    path('dashboard/', include('dashboard.urls')),
     path('accounts/', include('accounts.urls')),
 ]

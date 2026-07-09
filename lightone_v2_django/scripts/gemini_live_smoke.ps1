@@ -10,6 +10,7 @@ Set-Location -LiteralPath $AppRoot
 
 $secureKey = Read-Host "Google AI Studio GEMINI_API_KEY" -AsSecureString
 $bstr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secureKey)
+$TempFile = Join-Path $env:TEMP "lightone_gemini_smoke.py"
 try {
     $plainKey = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($bstr)
     if ([string]::IsNullOrWhiteSpace($plainKey)) {
@@ -21,8 +22,9 @@ try {
     $env:GEMINI_REPORT_MODEL = $Model
     $env:GEMINI_TIMEOUT_SECONDS = [string]$TimeoutSeconds
 
-    python - <<'PY'
+    $PythonCode = @'
 import json
+import os
 from google import genai
 from pydantic import BaseModel, Field
 
@@ -33,7 +35,7 @@ class SmokeResult(BaseModel):
 
 client = genai.Client()
 interaction = client.interactions.create(
-    model="gemini-3.5-flash",
+    model=os.environ.get("GEMINI_REPORT_MODEL", "gemini-3.5-flash"),
     input="LIGHTONE 합성 테스트입니다. 비의료 PT 상담 참고용 한 문장 요약을 JSON으로 작성하세요.",
     response_format={
         "type": "text",
@@ -43,11 +45,14 @@ interaction = client.interactions.create(
 )
 result = SmokeResult.model_validate_json(interaction.output_text)
 print(json.dumps(result.model_dump(), ensure_ascii=False, indent=2))
-PY
+'@
+    Set-Content -LiteralPath $TempFile -Value $PythonCode -Encoding UTF8
+    python $TempFile
 }
 finally {
     if ($bstr -ne [IntPtr]::Zero) {
         [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($bstr)
     }
     Remove-Variable plainKey -ErrorAction SilentlyContinue
+    Remove-Item -LiteralPath $TempFile -ErrorAction SilentlyContinue
 }

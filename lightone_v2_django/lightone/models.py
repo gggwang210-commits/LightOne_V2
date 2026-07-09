@@ -1,8 +1,10 @@
 import uuid
 
+from django.db import models
+
 from .algorithms import SAFETY_NOTICE, calculate_jatc, calculate_qs, route_session
+from .utils.qs_calculator import map_pain_response_score, normalize_score
 from accounts.models import MemberProfile, TrainerProfile
-from .algorithms import SAFETY_NOTICE, calculate_jatc, calculate_qs, route_session
 
 
 class Member(models.Model):
@@ -127,6 +129,8 @@ class MemberSession(models.Model):
     function_training_score = models.FloatField(default=0)
     pain_response = models.FloatField(default=0)
     rpe = models.FloatField(default=0)
+    rep_score = models.FloatField(default=100)
+    rest_score = models.FloatField(default=100)
     qc_score = models.FloatField(default=100)
     qs_form_component = models.FloatField(default=0)
     qs_discomfort_component = models.FloatField(default=0)
@@ -149,11 +153,11 @@ class MemberSession(models.Model):
 
     def calculate_qs_and_route(self):
         """Calculate MVP QS/JATC scores and non-medical trainer review routing."""
-        self.qs_form_component = self.form_accuracy * 10 if self.form_accuracy <= 10 else self.form_accuracy
-        self.qs_discomfort_component = 100 - (self.pain_response * 10)
-        self.qs_rpe_component = 100 - (abs(self.rpe - 7) * 10)
-        self.qs_qc_component = self.qc_score
-        self.qs_score = calculate_qs(self.form_accuracy, self.pain_response, self.rpe, self.qc_score)
+        self.qs_form_component = normalize_score(self.form_accuracy)
+        self.qs_discomfort_component = map_pain_response_score(self.pain_response)
+        self.qs_rpe_component = normalize_score(self.rep_score)
+        self.qs_qc_component = normalize_score(self.rest_score)
+        self.qs_score = calculate_qs(self.form_accuracy, self.rep_score, self.rest_score, self.pain_response)
         self.jatc_score = calculate_jatc(self.qs_score, self.form_accuracy, self.pain_response, self.rpe)
         self.route = route_session(self.qs_score, self.jatc_score, self.pain_response, self.qc_status)
         self.safety_notice = SAFETY_NOTICE

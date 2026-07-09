@@ -1,3 +1,10 @@
+from .utils.qs_calculator import (
+    clamp,
+    calculate_qs,
+    map_pain_response_score,
+    normalize_score,
+)
+
 SAFETY_NOTICE = '비의료 운동상담 참고, 트레이너 검토 필요'
 
 ROUTE_AUTO = 'AUTO'
@@ -5,34 +12,11 @@ ROUTE_REVIEW = 'REVIEW'
 ROUTE_BLOCK = 'BLOCK'
 
 
-def clamp(value, minimum=0, maximum=100):
-    return max(minimum, min(maximum, float(value)))
-
-
-def normalize_ten_scale(value):
-    value = float(value)
-    return value * 10 if value <= 10 else value
-
-
-def calculate_qs(form_accuracy, discomfort_response, rpe, qc_score=100):
-    """QS weighted average: form 0.4, discomfort stability 0.3, RPE fit 0.2, QC 0.1."""
-    form_component = normalize_ten_scale(form_accuracy)
-    discomfort_component = 100 - (clamp(discomfort_response, 0, 10) * 10)
-    rpe_component = 100 - (abs(clamp(rpe, 0, 10) - 7) * 10)
-    qc_component = normalize_ten_scale(qc_score)
-    score = (
-        clamp(form_component) * 0.4
-        + clamp(discomfort_component) * 0.3
-        + clamp(rpe_component) * 0.2
-        + clamp(qc_component) * 0.1
-    )
-    return round(clamp(score), 1)
-
 
 def calculate_jatc(qs_score, form_accuracy, discomfort_response, rpe):
     """JATC combines QS, movement quality, discomfort stability and session load fit."""
-    form_component = normalize_ten_scale(form_accuracy)
-    discomfort_component = 100 - (clamp(discomfort_response, 0, 10) * 10)
+    form_component = normalize_score(form_accuracy)
+    discomfort_component = map_pain_response_score(discomfort_response)
     rpe_component = 100 - (abs(clamp(rpe, 0, 10) - 7) * 10)
     score = (clamp(qs_score) * 0.5) + (clamp(form_component) * 0.2) + (clamp(discomfort_component) * 0.2) + (clamp(rpe_component) * 0.1)
     return round(clamp(score), 1)

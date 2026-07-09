@@ -2,6 +2,19 @@ from .algorithms import SAFETY_NOTICE
 from .models import MemberSession, StrategyItem
 
 
+def safe_member_id_for_session(session):
+    """Return the safest available member identifier for dashboard display."""
+    member = getattr(session, 'member', None)
+    if member is not None and hasattr(member, 'member_id'):
+        return str(member.member_id)
+
+    member_id = getattr(session, 'member_id', None)
+    if member_id is not None:
+        return str(member_id)
+
+    return str(session.pk)
+
+
 def dashboard_context():
     sessions = list(MemberSession.objects.all())
     total = len(sessions)
@@ -24,10 +37,21 @@ def dashboard_context():
         {'name': '생활습관', 'value': 0.06},
     ]
 
-    qs_trend = [{'label': s.created_at.strftime('%m/%d'), 'score': s.qs_score} for s in reversed(sessions[:8])]
+    dashboard_sessions = [
+        {
+            'pk': s.pk,
+            'member_id': safe_member_id_for_session(s),
+            'goal': s.goal,
+            'qs_score': s.qs_score,
+            'jatc_score': s.jatc_score,
+            'route': s.route,
+            'qc_status': s.qc_status,
+        }
+        for s in sessions
+    ]
 
     return {
-        'sessions': sessions,
+        'sessions': dashboard_sessions,
         'strategy_items': StrategyItem.objects.all()[:6],
         'total': total,
         'avg_qs': avg_qs,

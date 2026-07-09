@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from .models import MemberSession
+from .algorithms import SAFETY_NOTICE
 from .services import dashboard_context
 
 
@@ -10,7 +11,7 @@ def dashboard(request):
 
 def report_detail(request, pk):
     session = get_object_or_404(MemberSession, pk=pk)
-    return render(request, 'lightone/report_detail.html', {'session': session})
+    return render(request, 'lightone/report_detail.html', {'session': session, 'safety_notice': SAFETY_NOTICE})
 
 
 def method(request):

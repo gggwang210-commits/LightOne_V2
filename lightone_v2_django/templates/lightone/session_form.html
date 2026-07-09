@@ -34,19 +34,15 @@
         {{ form.discomfort_area }}
       </div>
       
-      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 20px;">
-        <div>
-          <label style="display: block; font-weight: 600; margin-bottom: 8px;">자세 품질 (0~10)</label>
-          {{ form.form_accuracy }}
-        </div>
-        <div>
-          <label style="display: block; font-weight: 600; margin-bottom: 8px;">통증 반응 (0~10)</label>
-          {{ form.pain_response }}
-        </div>
-        <div>
-          <label style="display: block; font-weight: 600; margin-bottom: 8px;">운동자각도 RPE (0~10)</label>
-          {{ form.rpe }}
-        </div>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px;">
+        <div><label style="display: block; font-weight: 600; margin-bottom: 8px;">자세 품질 (0~10)</label>{{ form.form_accuracy }}</div>
+        <div><label style="display: block; font-weight: 600; margin-bottom: 8px;">통증 반응 (0~10)</label>{{ form.pain_response }}</div>
+        <div><label style="display: block; font-weight: 600; margin-bottom: 8px;">운동자각도 RPE (0~10)</label>{{ form.rpe }}</div>
+        <div><label style="display: block; font-weight: 600; margin-bottom: 8px;">촬영 QC 상태</label>{{ form.qc_status }}</div>
+        <div><label style="display: block; font-weight: 600; margin-bottom: 8px;">촬영 QC 점수</label>{{ form.qc_score }}</div>
+        <div><label style="display: block; font-weight: 600; margin-bottom: 8px;">Posture</label>{{ form.posture_score }}</div>
+        <div><label style="display: block; font-weight: 600; margin-bottom: 8px;">Lifestyle</label>{{ form.lifestyle_score }}</div>
+        <div><label style="display: block; font-weight: 600; margin-bottom: 8px;">Function Training</label>{{ form.function_training_score }}</div>
       </div>
       
       <div style="margin-bottom: 20px;">

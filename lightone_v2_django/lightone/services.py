@@ -118,6 +118,9 @@ def dashboard_context(member_id=None):
         'counts': counts,
         'qc_counts': qc_counts,
         'feature_importance': feature_importance,
+        'safety_notice': SAFETY_NOTICE,
+        'chart_labels': [s.member_name for s in reversed(sessions[-8:])],
+        'chart_qs': [s.qs_score for s in reversed(sessions[-8:])],
     }
     context.update(_dashboard_chart_context(member_id))
     return context

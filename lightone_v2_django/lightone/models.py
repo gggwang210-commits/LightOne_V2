@@ -3,6 +3,33 @@ from django.db import models
 
 from django.db import models
 
+from .algorithms import SAFETY_NOTICE, calculate_jatc, calculate_qs, route_session
+from .utils.qs_calculator import map_pain_response_score, normalize_score
+from accounts.models import MemberProfile, TrainerProfile
+
+
+class Member(models.Model):
+    """회원 운동 참고 프로필(비의료 참고)로 직접 식별정보를 저장하지 않는다."""
+
+    GENDER_MALE = 'M'
+    GENDER_FEMALE = 'F'
+    GENDER_OTHER = 'Other'
+    GENDER_CHOICES = [
+        (GENDER_MALE, 'Male'),
+        (GENDER_FEMALE, 'Female'),
+        (GENDER_OTHER, 'Other'),
+    ]
+
+    member_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    gender = models.CharField(
+        max_length=10,
+        choices=GENDER_CHOICES,
+        help_text='비의료 참고 목적의 성별 분류이며 직접 식별정보를 포함하지 않습니다.',
+    )
+    age_group = models.CharField(max_length=20, help_text='비의료 참고 목적의 연령대입니다.')
+    goals = models.TextField(blank=True, help_text='비의료 참고 목적의 운동 목표입니다.')
+    consent = models.BooleanField(default=False, help_text='비의료 참고 데이터 활용 동의 여부입니다.')
+
 from django.db import models
 
 from django.db import models
@@ -34,6 +61,9 @@ class MemberSession(models.Model):
     form_accuracy = models.FloatField(default=0)
     pain_response = models.FloatField(default=0)
     rpe = models.FloatField(default=0)
+    rep_score = models.FloatField(default=100)
+    rest_score = models.FloatField(default=100)
+    qc_score = models.FloatField(default=100)
     qs_form_component = models.FloatField(default=0)
     qs_discomfort_component = models.FloatField(default=0)
     qs_rpe_component = models.FloatField(default=0)
@@ -62,14 +92,13 @@ class MemberSession(models.Model):
     }
 
     def calculate_qs_and_route(self):
-        """Calculate MVP QS/JATC scores and non-medical trainer review routing in memory."""
-        self.qs_form_component = self.form_accuracy * 10 if self.form_accuracy <= 10 else self.form_accuracy
-        self.qs_discomfort_component = 100 - (self.pain_response * 10)
-        self.qs_rpe_component = 100 - (abs(self.rpe - 7) * 10)
-        self.qs_qc_component = self.qc_score
-        self.qs_score = calculate_qs(self.form_accuracy, self.pain_response, self.rpe, self.qc_score)
-        jatc_result = calculate_jatc(self)
-        self.jatc_score = jatc_result['score']
+        """Calculate MVP QS/JATC scores and non-medical trainer review routing."""
+        self.qs_form_component = normalize_score(self.form_accuracy)
+        self.qs_discomfort_component = map_pain_response_score(self.pain_response)
+        self.qs_rpe_component = normalize_score(self.rep_score)
+        self.qs_qc_component = normalize_score(self.rest_score)
+        self.qs_score = calculate_qs(self.form_accuracy, self.rep_score, self.rest_score, self.pain_response)
+        self.jatc_score = calculate_jatc(self.qs_score, self.form_accuracy, self.pain_response, self.rpe)
         self.route = route_session(self.qs_score, self.jatc_score, self.pain_response, self.qc_status)
         self.safety_notice = SAFETY_NOTICE
 

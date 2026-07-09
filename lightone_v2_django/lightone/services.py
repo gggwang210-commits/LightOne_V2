@@ -1,35 +1,67 @@
-import json
-
-from django.core.exceptions import ValidationError
-
-ROUTING_BADGE_CLASSES = {
-    'AUTO': 'badge-green',
-    'GREEN': 'badge-green',
-    'REVIEW': 'badge-yellow',
-    'YELLOW': 'badge-yellow',
-    'BLOCK': 'badge-red',
-    'RED': 'badge-red',
-}
+from .models import Indicator, Member, MemberSession, StrategyItem
 
 
-def routing_label(route):
-    return str(route or '').strip()
+def _empty_member_dashboard():
+    return {
+        'selected_member_id': None,
+        'qs_labels': [],
+        'qs_scores': [],
+        'breakdown_values': [],
+        'recent_sessions': [],
+        'status_badges': {
+            'AUTO': 'badge-auto badge-green',
+            'REVIEW': 'badge-review badge-yellow',
+            'BLOCK': 'badge-block badge-red',
+        },
+    }
 
 
-def routing_badge_class(route):
-    normalized_route = routing_label(route).upper()
-    return ROUTING_BADGE_CLASSES.get(normalized_route, 'badge-gray')
+def _member_dashboard_context(member_id=None):
+    member_qs = Member.objects.all().order_by('member_id')
+    if member_id:
+        member_qs = member_qs.filter(member_id=member_id)
+
+    member = member_qs.first()
+    if not member:
+        return _empty_member_dashboard()
+
+    recent_sessions = list(
+        member.sessions.select_related('indicator').order_by('-date', 'exercise_name')[:5]
+    )
+    chronological_sessions = list(reversed(recent_sessions))
+    indicators = [getattr(session, 'indicator', None) for session in chronological_sessions]
+    indicators = [indicator for indicator in indicators if indicator is not None]
+
+    latest_indicator = getattr(recent_sessions[0], 'indicator', None) if recent_sessions else None
+    breakdown_values = []
+    if latest_indicator:
+        breakdown_values = [
+            latest_indicator.form_accuracy,
+            latest_indicator.rep_rate,
+            latest_indicator.rest_compliance,
+            latest_indicator.pain_score,
+            latest_indicator.jatc_pain,
+            latest_indicator.jatc_posture,
+            latest_indicator.jatc_function,
+            latest_indicator.jatc_lifestyle,
+        ]
+
+    return {
+        'selected_member_id': str(member.member_id),
+        'qs_labels': [session.date.strftime('%m/%d') for session in chronological_sessions],
+        'qs_scores': [indicator.qs_score for indicator in indicators],
+        'breakdown_values': breakdown_values,
+        'recent_sessions': recent_sessions,
+        'status_badges': {
+            'AUTO': 'badge-auto badge-green',
+            'REVIEW': 'badge-review badge-yellow',
+            'BLOCK': 'badge-block badge-red',
+        },
+    }
 
 
-def enrich_routing_badges(sessions):
-    for session in sessions:
-        session.routing_label = routing_label(session.route)
-        session.routing_badge_class = routing_badge_class(session.route)
-    return sessions
-
-
-def dashboard_context():
-    sessions = enrich_routing_badges(list(MemberSession.objects.all()))
+def dashboard_context(member_id=None):
+    sessions = list(MemberSession.objects.all())
     total = len(sessions)
     if total:
         avg_qs = round(sum(s.qs_score for s in sessions) / total, 1)
@@ -41,6 +73,15 @@ def dashboard_context():
     counts = {key: sum(1 for s in sessions if s.route == key) for key in ['AUTO', 'REVIEW', 'BLOCK']}
     qc_counts = {key: sum(1 for s in sessions if s.qc_status == key) for key in ['PASS', 'CHECK', 'FAIL']}
 
+    indicator_counts = {
+        key: Indicator.objects.filter(routing_status=key).count()
+        for key in ['AUTO', 'REVIEW', 'BLOCK']
+    }
+    for key, value in indicator_counts.items():
+        if value:
+            counts[key] += value
+    total += sum(indicator_counts.values())
+
     feature_importance = [
         {'name': '통증 반응', 'value': 0.28},
         {'name': '폼 정확도', 'value': 0.25},
@@ -49,6 +90,11 @@ def dashboard_context():
         {'name': 'JATC', 'value': 0.10},
         {'name': '생활습관', 'value': 0.06},
     ]
+
+    qs_labels = [session.date.strftime('%m/%d') for session in sessions]
+    qs_scores = [session.qs_score for session in sessions]
+    breakdown_labels = ['통증 반응', '폼 정확도', 'RPE', '촬영 QC', 'JATC', '생활습관']
+    breakdown_values = [0.28, 0.25, 0.18, 0.13, 0.10, 0.06]
 
     context = {
         'sessions': sessions,
@@ -65,4 +111,5 @@ def dashboard_context():
         'breakdown_labels': breakdown_labels,
         'breakdown_values': breakdown_values,
     }
+    context.update(_member_dashboard_context(member_id))
     return context

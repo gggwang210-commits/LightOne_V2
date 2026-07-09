@@ -85,6 +85,29 @@
     <b>ⓘ Safety Boundary</b>
     본 결과는 비의료 운동상담 참고용이며, 최종 운동 조정은 트레이너 검토 후 안내됩니다. · REVIEW/BLOCK은 트레이너가 안전 신호를 확인한 뒤 진행 여부를 안내합니다.
   </div>
+  <div class="member-dashboard" data-selected-member-id="{{ selected_member_id|default:'' }}">
+    <h3>선택 회원 QS 추이</h3>
+    <p class="muted">이 영역은 비의료 운동상담 참고 정보만 표시하며 직접 식별정보를 표시하지 않습니다.</p>
+    <div class="qs-chart" data-labels="{{ qs_labels|join:',' }}" data-scores="{{ qs_scores|join:',' }}"></div>
+    <div class="breakdown-values" data-values="{{ breakdown_values|join:',' }}"></div>
+    <div class="status-badges" aria-label="routing status badges">
+      <span class="{{ status_badges.AUTO }}">AUTO</span>
+      <span class="{{ status_badges.REVIEW }}">REVIEW</span>
+      <span class="{{ status_badges.BLOCK }}">BLOCK</span>
+    </div>
+    <ul class="recent-sessions">
+      {% for session in recent_sessions %}
+      <li>
+        <strong>{{ session.exercise_name }}</strong>
+        <span>QS {{ session.indicator.qs_score }}</span>
+        <span>{{ session.indicator.routing_status }}</span>
+      </li>
+      {% empty %}
+      <li>선택 회원의 최근 세션이 없습니다.</li>
+      {% endfor %}
+    </ul>
+  </div>
+
 </section>
 
   .lo-lead {

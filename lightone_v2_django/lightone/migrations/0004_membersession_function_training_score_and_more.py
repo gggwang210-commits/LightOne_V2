@@ -7,6 +7,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ("lightone", "0003_member_session_indicator"),
+        ("lightone", "0003_membersession_qc_score_and_more"),
     ]
 
     operations = [
@@ -27,15 +28,10 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name="membersession",
-            name="qc_score",
-            field=models.FloatField(default=100),
-        ),
-        migrations.AddField(
-            model_name="membersession",
             name="review_note",
             field=models.TextField(blank=True),
         ),
-        migrations.AddField(
+        migrations.AlterField(
             model_name="membersession",
             name="safety_notice",
             field=models.TextField(

@@ -29,8 +29,13 @@ def calculate_qs(form_accuracy, discomfort_response, rpe, qc_score=100):
     return round(clamp(score), 1)
 
 
-def calculate_jatc(qs_score, form_accuracy, discomfort_response, rpe):
-    """JATC combines QS, movement quality, discomfort stability and session load fit."""
+def calculate_jatc(qs_score, form_accuracy=None, discomfort_response=None, rpe=None):
+    """Backward-compatible JATC score helper for numeric inputs or a session object."""
+    if form_accuracy is None and hasattr(qs_score, '__dict__'):
+        from lightone.utils.jatc_calculator import calculate_jatc as calculate_session_jatc
+
+        return calculate_session_jatc(qs_score)['score']
+
     form_component = normalize_ten_scale(form_accuracy)
     discomfort_component = 100 - (clamp(discomfort_response, 0, 10) * 10)
     rpe_component = 100 - (abs(clamp(rpe, 0, 10) - 7) * 10)

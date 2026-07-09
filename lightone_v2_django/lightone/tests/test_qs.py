@@ -1,6 +1,7 @@
 from django.test import TestCase
 
 from lightone.algorithms import calculate_jatc, calculate_qs, route_session
+from lightone.utils.qs_calculator import determine_routing
 from lightone.models import MemberSession
 
 
@@ -15,6 +16,13 @@ class QsJatcAlgorithmTests(TestCase):
         self.assertEqual(route_session(qs, jatc, 1, 'PASS'), 'AUTO')
         self.assertEqual(route_session(65, 65, 4, 'PASS'), 'REVIEW')
         self.assertEqual(route_session(80, 80, 8, 'PASS'), 'BLOCK')
+
+    def test_determine_routing_prioritizes_safety_and_pain_scale(self):
+        self.assertEqual(determine_routing(95, 1, safety_flags=['manual_stop']), 'BLOCK')
+        self.assertEqual(determine_routing(95, 8), 'BLOCK')
+        self.assertEqual(determine_routing(80, 3), 'AUTO')
+        self.assertEqual(determine_routing(95, 4), 'REVIEW')
+        self.assertEqual(determine_routing(79, 'none'), 'REVIEW')
 
     def test_model_calculates_scores_and_notice(self):
         session = MemberSession.objects.create(

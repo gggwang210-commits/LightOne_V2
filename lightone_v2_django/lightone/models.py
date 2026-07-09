@@ -1,8 +1,10 @@
 import uuid
 
-from .algorithms import SAFETY_NOTICE, calculate_jatc, calculate_qs, route_session
+from django.db import models
+
 from accounts.models import MemberProfile, TrainerProfile
-from .algorithms import SAFETY_NOTICE, calculate_jatc, calculate_qs, route_session
+from .algorithms import SAFETY_NOTICE, calculate_jatc, calculate_qs
+from .utils.qs_calculator import determine_routing
 
 
 class Member(models.Model):
@@ -155,7 +157,8 @@ class MemberSession(models.Model):
         self.qs_qc_component = self.qc_score
         self.qs_score = calculate_qs(self.form_accuracy, self.pain_response, self.rpe, self.qc_score)
         self.jatc_score = calculate_jatc(self.qs_score, self.form_accuracy, self.pain_response, self.rpe)
-        self.route = route_session(self.qs_score, self.jatc_score, self.pain_response, self.qc_status)
+        safety_flags = {'qc_status_fail': self.qc_status == 'FAIL'}
+        self.route = determine_routing(self.qs_score, self.pain_response, safety_flags=safety_flags)
         self.safety_notice = SAFETY_NOTICE
         self.save()
 

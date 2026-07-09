@@ -20,7 +20,7 @@ class MemberSession(models.Model):
 
     member = models.ForeignKey(MemberProfile, on_delete=models.CASCADE, null=True, blank=True, related_name='sessions')
     trainer = models.ForeignKey(TrainerProfile, on_delete=models.SET_NULL, null=True, blank=True, related_name='conducted_sessions')
-    
+
     member_name = models.CharField(max_length=80)
     trainer_name = models.CharField(max_length=80, default='김라이트')
     goal = models.CharField(max_length=120)
@@ -28,10 +28,6 @@ class MemberSession(models.Model):
     qs_score = models.FloatField(default=0)
     jatc_score = models.FloatField(default=0)
     form_accuracy = models.FloatField(default=0)
-    qc_score = models.FloatField(default=100)
-    posture_score = models.FloatField(default=0)
-    lifestyle_score = models.FloatField(default=0)
-    function_training_score = models.FloatField(default=0)
     pain_response = models.FloatField(default=0)
     rpe = models.FloatField(default=0)
     qs_form_component = models.FloatField(default=0)
@@ -41,9 +37,6 @@ class MemberSession(models.Model):
     route = models.CharField(max_length=10, choices=ROUTE_CHOICES, default='AUTO')
     qc_status = models.CharField(max_length=10, choices=QC_CHOICES, default='PASS')
     memo = models.TextField(blank=True)
-    review_note = models.TextField(blank=True)
-    safety_notice = models.TextField(default=SAFETY_NOTICE)
-    trainer_confirmed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

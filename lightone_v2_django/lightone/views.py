@@ -5,7 +5,7 @@ from .services import dashboard_context
 
 
 def dashboard(request):
-    return render(request, 'lightone/dashboard.html', dashboard_context())
+    return render(request, 'dashboard/dashboard.html', dashboard_context())
 
 
 def report_detail(request, pk):

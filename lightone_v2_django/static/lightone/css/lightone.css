@@ -818,6 +818,26 @@ body::before {
   color: #e32935;
 }
 
+.routing-badge.badge-green {
+  background: #e8fbf3;
+  color: #12845f;
+}
+
+.routing-badge.badge-yellow {
+  background: #fff7e8;
+  color: #d98500;
+}
+
+.routing-badge.badge-red {
+  background: #fff0f1;
+  color: #e32935;
+}
+
+.routing-badge.badge-gray {
+  background: #eef2f7;
+  color: #617088;
+}
+
 .report-card p {
   color: #617088;
   min-height: 42px;

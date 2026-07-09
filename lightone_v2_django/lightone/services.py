@@ -91,6 +91,11 @@ def dashboard_context(member_id=None):
         {'name': '생활습관', 'value': 0.06},
     ]
 
+    qs_labels = [session.date.strftime('%m/%d') for session in sessions]
+    qs_scores = [session.qs_score for session in sessions]
+    breakdown_labels = ['통증 반응', '폼 정확도', 'RPE', '촬영 QC', 'JATC', '생활습관']
+    breakdown_values = [0.28, 0.25, 0.18, 0.13, 0.10, 0.06]
+
     context = {
         'sessions': sessions,
         'recent_sessions': sessions,

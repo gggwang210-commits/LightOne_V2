@@ -23,8 +23,8 @@ class SessionAdmin(admin.ModelAdmin):
 
 @admin.register(Indicator)
 class IndicatorAdmin(admin.ModelAdmin):
-    list_display = ('session', 'qs_score', 'jatc_score', 'review_signal', 'counseling_priority', 'report_status', 'trainer_confirmed')
-    list_filter = ('review_signal', 'report_status', 'trainer_confirmed')
+    list_display = ('member_session', 'qs_score', 'jatc_score', 'route', 'qc_status', 'trainer_review_required', 'created_at')
+    list_filter = ('route', 'qc_status', 'trainer_review_required')
 
 @admin.register(StrategyItem)
 class StrategyItemAdmin(admin.ModelAdmin):

@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.utils import timezone
 
 from lightone.algorithms import calculate_jatc, calculate_qs, route_session
 from lightone.utils.qs_calculator import map_pain_response_score
@@ -39,3 +40,9 @@ class QsJatcAlgorithmTests(TestCase):
         self.assertEqual(session.qs_score, 78.0)
         self.assertEqual(session.route, 'AUTO')
         self.assertIn('비의료 운동상담 참고', session.safety_notice)
+        indicator = Indicator.objects.get(member_session=session)
+        self.assertEqual(indicator.qs_score, session.qs_score)
+        self.assertEqual(indicator.jatc_score, session.jatc_score)
+        self.assertEqual(indicator.route, session.route)
+        self.assertEqual(indicator.qc_status, session.qc_status)
+        self.assertFalse(indicator.trainer_review_required)

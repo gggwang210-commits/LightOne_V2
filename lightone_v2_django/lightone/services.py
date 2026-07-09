@@ -1,3 +1,4 @@
+from .algorithms import SAFETY_NOTICE
 from .models import MemberSession, StrategyItem
 
 
@@ -58,4 +59,7 @@ def dashboard_context():
         'counts': counts,
         'qc_counts': qc_counts,
         'feature_importance': feature_importance,
+        'safety_notice': SAFETY_NOTICE,
+        'chart_labels': [s.member_name for s in reversed(sessions[-8:])],
+        'chart_qs': [s.qs_score for s in reversed(sessions[-8:])],
     }

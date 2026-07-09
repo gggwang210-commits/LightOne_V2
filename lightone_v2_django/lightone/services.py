@@ -23,6 +23,17 @@ def dashboard_context():
         {'name': '생활습관', 'value': 0.06},
     ]
 
+    recent_sessions = sorted(sessions, key=lambda session: session.created_at)[-8:]
+    qs_labels = [session.created_at.strftime('%m/%d') for session in recent_sessions]
+    qs_scores = [session.qs_score for session in recent_sessions]
+    breakdown_labels = ['Form Accuracy', 'Pain Response', 'RPE', 'JATC']
+    breakdown_values = [
+        round(sum(s.form_accuracy for s in sessions) / total, 1) if total else 0,
+        round(sum(s.pain_response for s in sessions) / total, 1) if total else 0,
+        round(sum(s.rpe for s in sessions) / total, 1) if total else 0,
+        avg_jatc,
+    ]
+
     return {
         'sessions': sessions,
         'strategy_items': StrategyItem.objects.all()[:6],
@@ -32,4 +43,8 @@ def dashboard_context():
         'counts': counts,
         'qc_counts': qc_counts,
         'feature_importance': feature_importance,
+        'qs_labels': qs_labels,
+        'qs_scores': qs_scores,
+        'breakdown_labels': breakdown_labels,
+        'breakdown_values': breakdown_values,
     }

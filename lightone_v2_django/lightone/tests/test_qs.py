@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.utils import timezone
 
 from lightone.algorithms import calculate_jatc, calculate_qs, route_session
 from lightone.models import Indicator, MemberSession
@@ -16,7 +17,7 @@ class QsJatcAlgorithmTests(TestCase):
         self.assertEqual(route_session(65, 65, 4, 'PASS'), 'REVIEW')
         self.assertEqual(route_session(80, 80, 8, 'PASS'), 'BLOCK')
 
-    def test_model_calculates_scores_and_notice(self):
+    def test_model_calculates_scores_and_notice_on_save(self):
         session = MemberSession.objects.create(
             member_name='Synthetic Member A',
             goal='Synthetic conditioning check',
@@ -25,8 +26,8 @@ class QsJatcAlgorithmTests(TestCase):
             rpe=7,
             qc_score=90,
         )
-        session.calculate_qs_and_route()
         self.assertEqual(session.qs_score, 85.0)
+        self.assertGreater(session.jatc_score, 0)
         self.assertEqual(session.route, 'AUTO')
         self.assertIn('비의료 운동상담 참고', session.safety_notice)
         indicator = Indicator.objects.get(member_session=session)

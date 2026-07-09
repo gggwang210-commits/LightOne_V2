@@ -1,5 +1,5 @@
-# This workflow will install Python dependencies, run tests and lint with a single version of Python
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+# This workflow installs Django MVP dependencies, runs a minimal flake8 gate, and executes a QS smoke test.
+# Keep the working path aligned with the actual app root: lightone_v2_django.
 
 name: Python application
 
@@ -14,30 +14,40 @@ permissions:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
-    - name: Set up Python 3.10
-      uses: actions/setup-python@v3
+
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v5
       with:
-        python-version: "3.10"
+        python-version: "3.11"
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install flake8 pytest
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        if [ -f lightone_v2_django/requirements.txt ]; then pip install -r lightone_v2_django/requirements.txt; fi
+
     - name: Lint with flake8
       run: |
-        # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    - name: Test with pytest
+        # Stop the build if there are Python syntax errors or undefined names.
+        flake8 lightone_v2_django --count --select=E9,F63,F7,F82 --show-source --statistics
+        # Treat style findings as warnings for MVP velocity.
+        flake8 lightone_v2_django --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+    - name: QS smoke test
       run: |
-        if [ -d "tests" ] && find tests -name "test_*.py" | grep -q .; then
-          pytest
-        else
-          echo "No tests found. Skipping pytest."
-        fi
+        cd lightone_v2_django
+        python - <<'PY'
+        from lightone.algorithms import SAFETY_NOTICE, calculate_jatc, calculate_qs, route_session
+
+        qs = calculate_qs(form_accuracy=80, discomfort_response=2, rpe=7, qc_score=90)
+        assert qs == 85.0, qs
+        jatc = calculate_jatc(qs, form_accuracy=80, discomfort_response=2, rpe=7)
+        assert route_session(qs, jatc, 2, 'PASS') == 'AUTO'
+        assert route_session(65, 65, 4, 'PASS') == 'REVIEW'
+        assert route_session(80, 80, 8, 'PASS') == 'BLOCK'
+        assert '비의료 운동상담 참고' in SAFETY_NOTICE
+        PY

@@ -29,8 +29,13 @@ def calculate_qs(form_accuracy, discomfort_response, rpe, qc_score=100):
     return round(clamp(score), 1)
 
 
-def calculate_jatc(qs_score, form_accuracy, discomfort_response, rpe):
-    """JATC combines QS, movement quality, discomfort stability and session load fit."""
+def calculate_jatc(qs_score, form_accuracy=None, discomfort_response=None, rpe=None):
+    """Backward-compatible JATC score helper for numeric inputs or a session object."""
+    if form_accuracy is None and hasattr(qs_score, '__dict__'):
+        from lightone.utils.jatc_calculator import calculate_jatc as calculate_session_jatc
+
+        return calculate_session_jatc(qs_score)['score']
+
     form_component = normalize_ten_scale(form_accuracy)
     discomfort_component = 100 - (clamp(discomfort_response, 0, 10) * 10)
     rpe_component = 100 - (abs(clamp(rpe, 0, 10) - 7) * 10)
@@ -38,9 +43,15 @@ def calculate_jatc(qs_score, form_accuracy, discomfort_response, rpe):
     return round(clamp(score), 1)
 
 
-def route_session(qs_score, jatc_score, discomfort_response, qc_status='PASS'):
+def determine_routing(qs_score, jatc_score=None, discomfort_response=0, qc_status='PASS'):
+    if jatc_score is None:
+        jatc_score = qs_score
     if qc_status == 'FAIL' or discomfort_response >= 7 or qs_score < 40 or jatc_score < 40:
         return ROUTE_BLOCK
     if qc_status == 'CHECK' or discomfort_response >= 4 or qs_score < 70 or jatc_score < 60:
         return ROUTE_REVIEW
     return ROUTE_AUTO
+
+
+def route_session(qs_score, jatc_score, discomfort_response, qc_status='PASS'):
+    return determine_routing(qs_score, jatc_score, discomfort_response, qc_status)

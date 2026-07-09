@@ -37,6 +37,33 @@
     <div class="notice compact-notice">{{ safety_notice }}</div>
   </div>
 </section>
+{% if ai_draft_result.enabled %}
+<section class="section-block">
+  <div class="panel-card">
+    <h3>Gemini AI 트레이너 검토 초안</h3>
+    {% if ai_draft_result.draft %}
+      <p class="muted">{{ ai_draft_result.draft.summary }}</p>
+      <div class="route-grid compact">
+        <div><span>검토 필요</span><strong>{% if ai_draft_result.draft.trainer_review_required %}YES{% else %}NO{% endif %}</strong></div>
+        <div><span>모델</span><strong>{{ ai_draft_result.model }}</strong></div>
+      </div>
+      <h4>확인 항목</h4>
+      <ul>
+        {% for flag in ai_draft_result.draft.risk_flags %}
+          <li>{{ flag }}</li>
+        {% empty %}
+          <li>추가 확인 항목 없음</li>
+        {% endfor %}
+      </ul>
+      <h4>다음 세션 포커스</h4>
+      <p class="muted">{{ ai_draft_result.draft.next_session_focus }}</p>
+      <div class="notice compact-notice">{{ ai_draft_result.draft.safety_notice }}</div>
+    {% else %}
+      <div class="notice compact-notice">{{ ai_draft_result.error_message }}</div>
+    {% endif %}
+  </div>
+</section>
+{% endif %}
 <section class="section-block">
   <div class="panel-card">
     <h3>Basic Report Generator</h3>

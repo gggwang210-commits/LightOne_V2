@@ -1,6 +1,7 @@
 import uuid
 
-from .algorithms import SAFETY_NOTICE, calculate_jatc, calculate_qs, route_session
+from django.db import models
+
 from accounts.models import MemberProfile, TrainerProfile
 from .algorithms import SAFETY_NOTICE, calculate_jatc, calculate_qs, route_session
 
@@ -37,7 +38,7 @@ class Member(models.Model):
 
 
 class Session(models.Model):
-    """회원별 운동 세션 기록(비의료 참고)으로 의료 진단 목적이 아니다."""
+    """회원별 운동 세션 기록(비의료 참고)으로 트레이너 상담 보조에만 사용한다."""
 
     session_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     member = models.ForeignKey(Member, on_delete=models.CASCADE, related_name='sessions')

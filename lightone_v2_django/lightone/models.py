@@ -68,7 +68,7 @@ class MemberSession(models.Model):
 
     route = models.CharField(max_length=10, choices=ROUTE_CHOICES, default=ROUTE_AUTO)
     qc_status = models.CharField(max_length=10, choices=QC_CHOICES, default=QC_PASS)
-    safety_notice = models.CharField(max_length=240, default=SAFETY_NOTICE)
+    safety_notice = models.TextField(default=SAFETY_NOTICE)
     review_note = models.TextField(blank=True)
     trainer_confirmed = models.BooleanField(default=False)
     memo = models.TextField(blank=True)

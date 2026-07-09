@@ -1,102 +1,9 @@
 import uuid
 
-from .algorithms import SAFETY_NOTICE, calculate_jatc, calculate_qs, route_session
+from django.db import models
+
 from accounts.models import MemberProfile, TrainerProfile
 from .algorithms import SAFETY_NOTICE, calculate_jatc, calculate_qs, route_session
-
-
-class Member(models.Model):
-    """회원 운동 참고 프로필(비의료 참고)로 직접 식별정보를 저장하지 않는다."""
-
-    GENDER_MALE = 'M'
-    GENDER_FEMALE = 'F'
-    GENDER_OTHER = 'Other'
-    GENDER_CHOICES = [
-        (GENDER_MALE, 'Male'),
-        (GENDER_FEMALE, 'Female'),
-        (GENDER_OTHER, 'Other'),
-    ]
-
-    member_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    gender = models.CharField(
-        max_length=10,
-        choices=GENDER_CHOICES,
-        help_text='비의료 참고 목적의 성별 분류이며 직접 식별정보를 포함하지 않습니다.',
-    )
-    age_group = models.CharField(max_length=20, help_text='비의료 참고 목적의 연령대입니다.')
-    goals = models.TextField(blank=True, help_text='비의료 참고 목적의 운동 목표입니다.')
-    consent = models.BooleanField(default=False, help_text='비의료 참고 데이터 활용 동의 여부입니다.')
-
-    class Meta:
-        ordering = ['age_group', 'member_id']
-        verbose_name = 'Member'
-        verbose_name_plural = 'Members'
-
-    def __str__(self):
-        return f'Member {str(self.member_id)[:8]} ({self.age_group})'
-
-
-class Session(models.Model):
-    """회원별 운동 세션 기록(비의료 참고)으로 의료 진단 목적이 아니다."""
-
-    session_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    member = models.ForeignKey(Member, on_delete=models.CASCADE, related_name='sessions')
-    date = models.DateTimeField(help_text='비의료 참고 목적의 운동 세션 일시입니다.')
-    exercise_name = models.CharField(max_length=120, help_text='비의료 참고 목적의 운동명입니다.')
-    sets = models.PositiveIntegerField(help_text='비의료 참고 목적의 세트 수입니다.')
-    reps_target = models.PositiveIntegerField(help_text='비의료 참고 목적의 목표 반복 수입니다.')
-    reps_completed = models.PositiveIntegerField(help_text='비의료 참고 목적의 완료 반복 수입니다.')
-    rpe = models.FloatField(help_text='비의료 참고 목적의 운동자각도입니다.')
-    pain_response = models.PositiveSmallIntegerField(help_text='비의료 참고 목적의 통증 반응 점수입니다.')
-    trainer_notes = models.TextField(blank=True, help_text='비의료 참고 목적의 트레이너 메모입니다.')
-
-    class Meta:
-        ordering = ['-date', 'exercise_name', 'session_id']
-        verbose_name = 'Session'
-        verbose_name_plural = 'Sessions'
-
-    def __str__(self):
-        return f'Session {str(self.session_id)[:8]} - {self.date:%Y-%m-%d} - {self.exercise_name}'
-
-
-class Indicator(models.Model):
-    """운동 세션별 지표(비의료 참고)로 자동 라우팅 보조에만 사용한다."""
-
-    ROUTING_AUTO = 'AUTO'
-    ROUTING_REVIEW = 'REVIEW'
-    ROUTING_BLOCK = 'BLOCK'
-    ROUTING_STATUS_CHOICES = [
-        (ROUTING_AUTO, 'AUTO'),
-        (ROUTING_REVIEW, 'REVIEW'),
-        (ROUTING_BLOCK, 'BLOCK'),
-    ]
-
-    indicator_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    session = models.OneToOneField(Session, on_delete=models.CASCADE, related_name='indicator')
-    qs_score = models.FloatField(help_text='비의료 참고 목적의 품질 점수입니다.')
-    form_accuracy = models.FloatField(help_text='비의료 참고 목적의 자세 정확도입니다.')
-    rep_rate = models.FloatField(help_text='비의료 참고 목적의 반복 속도입니다.')
-    rest_compliance = models.FloatField(help_text='비의료 참고 목적의 휴식 준수율입니다.')
-    pain_score = models.FloatField(help_text='비의료 참고 목적의 통증 점수입니다.')
-    jatc_pain = models.FloatField(help_text='비의료 참고 목적의 JATC 통증 지표입니다.')
-    jatc_posture = models.FloatField(help_text='비의료 참고 목적의 JATC 자세 지표입니다.')
-    jatc_function = models.FloatField(help_text='비의료 참고 목적의 JATC 기능 지표입니다.')
-    jatc_lifestyle = models.FloatField(help_text='비의료 참고 목적의 JATC 생활습관 지표입니다.')
-    routing_status = models.CharField(
-        max_length=10,
-        choices=ROUTING_STATUS_CHOICES,
-        default=ROUTING_AUTO,
-        help_text='비의료 참고 목적의 자동 라우팅 상태입니다.',
-    )
-
-    class Meta:
-        ordering = ['routing_status', 'indicator_id']
-        verbose_name = 'Indicator'
-        verbose_name_plural = 'Indicators'
-
-    def __str__(self):
-        return f'Indicator {str(self.indicator_id)[:8]} - {self.routing_status}'
-
 
 
 class MemberSession(models.Model):
@@ -140,6 +47,7 @@ class MemberSession(models.Model):
     safety_notice = models.TextField(default=SAFETY_NOTICE)
     trainer_confirmed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ['-created_at', '-qs_score']
@@ -157,7 +65,21 @@ class MemberSession(models.Model):
         self.jatc_score = calculate_jatc(self.qs_score, self.form_accuracy, self.pain_response, self.rpe)
         self.route = route_session(self.qs_score, self.jatc_score, self.pain_response, self.qc_status)
         self.safety_notice = SAFETY_NOTICE
-        self.save()
+
+    def save(self, *args, **kwargs):
+        self.calculate_qs_and_route()
+        super().save(*args, **kwargs)
+        Indicator.objects.update_or_create(
+            member_session=self,
+            defaults={
+                'qs_score': self.qs_score,
+                'jatc_score': self.jatc_score,
+                'route': self.route,
+                'qc_status': self.qc_status,
+                'non_medical_notice': SAFETY_NOTICE,
+                'trainer_review_required': self.route in {'REVIEW', 'BLOCK'} or self.qc_status != 'PASS',
+            },
+        )
 
 
 class Member(models.Model):
@@ -222,35 +144,24 @@ class Session(models.Model):
 
 
 class Indicator(models.Model):
-    ROUTE_CHOICES = Session.ROUTE_CHOICES
-    REPORT_CHOICES = [
-        ('PENDING', 'Pending'),
-        ('READY', 'Ready'),
-        ('HELD', 'Held'),
-    ]
+    ROUTE_CHOICES = MemberSession.ROUTE_CHOICES
+    QC_CHOICES = MemberSession.QC_CHOICES
 
-    session = models.OneToOneField(Session, on_delete=models.CASCADE, related_name='indicator')
-    posture_score = models.FloatField(default=0)
-    lifestyle_score = models.FloatField(default=0)
-    rep_achievement_rate = models.FloatField(default=0)
-    rest_compliance = models.FloatField(default=0)
-    pain_score = models.FloatField(default=0)
-    function_training_score = models.FloatField(default=0)
+    member_session = models.OneToOneField(MemberSession, on_delete=models.CASCADE, related_name='indicator')
     qs_score = models.FloatField(default=0)
     jatc_score = models.FloatField(default=0)
-    review_signal = models.CharField(max_length=10, choices=ROUTE_CHOICES, default='AUTO')
-    counseling_priority = models.PositiveSmallIntegerField(default=3)
-    report_status = models.CharField(max_length=10, choices=REPORT_CHOICES, default='PENDING')
-    review_note = models.TextField(blank=True)
-    trainer_confirmed = models.BooleanField(default=False)
+    route = models.CharField(max_length=10, choices=ROUTE_CHOICES, default='AUTO')
+    qc_status = models.CharField(max_length=10, choices=QC_CHOICES, default='PASS')
+    non_medical_notice = models.TextField(default=SAFETY_NOTICE)
+    trainer_review_required = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ['-qs_score', 'session__session_id']
+        ordering = ['-created_at', '-qs_score']
 
     def __str__(self):
-        return f'{self.session.session_id} indicator'
+        return f'{self.member_session.member_name} indicator - {self.route}'
 
 
 class StrategyItem(models.Model):

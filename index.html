@@ -69,6 +69,41 @@
       font-size: clamp(1.05rem, 2vw, 1.28rem);
     }
 
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 0 18px;
+      border: 1px solid rgba(103, 232, 249, 0.5);
+      border-radius: 999px;
+      color: #06111f;
+      background: var(--accent);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .hero-cta.secondary {
+      color: var(--text);
+      background: rgba(148, 163, 184, 0.12);
+      border-color: var(--line);
+    }
+
+    .hero-bullets {
+      display: grid;
+      gap: 8px;
+      margin: 24px 0 0;
+      padding-left: 1.1rem;
+      color: #dbeafe;
+    }
+
     .submission-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -128,12 +163,21 @@
   <main>
     <section id="public-submission" aria-labelledby="public-submission-title">
       <div class="submission-hero">
-        <p class="eyebrow">Public Submission · LIGHTONE_V2</p>
-        <h1 id="public-submission-title">PT 현장의 흩어진 기록을 상담 가능한 데이터로 바꾸는 비의료 운동상담 리포트 SaaS</h1>
-        <p class="lead">README, Django MVP 문서, 사업화 전략서, 전문가 검토 인포그래픽의 핵심 문구를 바탕으로 제출용 요약 카드를 구성했습니다. 의료적 판단처럼 보일 수 있는 표현은 배제하고, 미검증 수치·가설에는 [확인필요]를 표시했습니다.</p>
+        <p class="eyebrow">LIGHTONE_V2 · Public Submission</p>
+        <h1 id="public-submission-title">트레이너 검토 기반 PT 상담 리포트 SaaS</h1>
+        <p class="lead">LIGHTONE_V2는 PT샵·헬스장·필라테스 센터가 세션 기록과 회원 반응을 정리해 재등록 상담에 활용할 수 있도록 돕는 비의료 상담 리포트 MVP입니다. QS/JATC와 라우팅은 트레이너 검토를 돕는 참고 지표이며, 의료 판단을 대체하지 않습니다.</p>
+        <div class="hero-actions" aria-label="주요 이동 링크">
+          <a class="hero-cta" href="#summary-cards">서비스 요약 보기</a>
+          <a class="hero-cta secondary" href="lightone_v2_django/RUN_WINDOWS.md">Django MVP 실행 가이드</a>
+        </div>
+        <ul class="hero-bullets">
+          <li>흩어진 세션 기록을 상담 가능한 요약으로 정리</li>
+          <li>QS/JATC와 AUTO/REVIEW/BLOCK은 비의료 참고 지표로 표시</li>
+          <li>AI·규칙 기반 초안은 트레이너 검토 후 사용</li>
+        </ul>
       </div>
 
-      <div class="submission-grid" aria-label="LIGHTONE_V2 제출 요약 카드">
+      <div id="summary-cards" class="submission-grid" aria-label="LIGHTONE_V2 제출 요약 카드">
         <article class="summary-card">
           <strong>사업명</strong>
           <p>LIGHTONE_V2 — 비의료 PT 상담 리포트 SaaS + 기능적 컨디셔닝 OS + 교육·인증 IP 확장 전략.</p>

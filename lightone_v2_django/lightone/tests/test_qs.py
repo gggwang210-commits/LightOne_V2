@@ -3,7 +3,7 @@ from django.utils import timezone
 
 from lightone.algorithms import calculate_jatc, calculate_qs, route_session
 from lightone.utils.qs_calculator import determine_routing
-from lightone.models import MemberSession
+from lightone.models import Indicator, MemberSession
 
 
 class QsJatcAlgorithmTests(TestCase):

@@ -1,4 +1,54 @@
-from lightone.algorithms import ROUTE_AUTO, ROUTE_BLOCK, ROUTE_REVIEW
+ROUTE_AUTO = 'AUTO'
+ROUTE_REVIEW = 'REVIEW'
+ROUTE_BLOCK = 'BLOCK'
+
+
+def clamp(value, minimum=0, maximum=100):
+    return max(minimum, min(maximum, float(value)))
+
+
+def normalize_score(value):
+    value = float(value)
+    if value <= 10:
+        return clamp(value * 10)
+    return clamp(value)
+
+
+def map_pain_response_score(pain_level):
+    return clamp(100 - (float(pain_level) * 25))
+
+
+def calculate_qs(
+    form=None,
+    rep=None,
+    rest=None,
+    pain_level=None,
+    *,
+    form_accuracy=None,
+    discomfort_response=None,
+    rpe=None,
+    qc_score=None,
+):
+    if form_accuracy is not None:
+        form = form_accuracy
+    if discomfort_response is not None:
+        pain_level = discomfort_response
+    if rpe is not None:
+        rep = 100 - (abs(clamp(rpe, 0, 10) - 7) * 10)
+    if qc_score is not None:
+        rest = qc_score
+
+    form_component = normalize_score(form or 0)
+    rep_component = normalize_score(100 if rep is None else rep)
+    rest_component = normalize_score(100 if rest is None else rest)
+    pain_component = map_pain_response_score(pain_level or 0)
+    score = (
+        (form_component * 0.4)
+        + (rep_component * 0.3)
+        + (rest_component * 0.2)
+        + (pain_component * 0.1)
+    )
+    return round(clamp(score), 1)
 
 
 def _has_safety_flags(safety_flags=None):

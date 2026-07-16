@@ -1,4 +1,5 @@
 :root {
+  /* QS Dashboard font stack: external/system fonts only; no bundled font files. */
   --font-dashboard: "Pretendard", "SUIT", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", "Inter", Arial, sans-serif;
   --bg: #f5f8fc;
   --surface: #ffffff;

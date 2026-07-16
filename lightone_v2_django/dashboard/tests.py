@@ -22,6 +22,7 @@ class DashboardPrivacyAndContextTests(TestCase):
         ]
         for index, status in enumerate(statuses):
             session = Session.objects.create(
+                session_id=f'synthetic-session-{index}',
                 member=cls.member,
                 session_id=f"synthetic-session-{index}",
                 session_date=(

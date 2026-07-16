@@ -15,35 +15,30 @@ class DashboardPrivacyAndContextTests(TestCase):
             goals='synthetic mobility goal',
             consent=True,
         )
-        statuses = [
-            Indicator.ROUTING_AUTO,
-            Indicator.ROUTING_REVIEW,
-            Indicator.ROUTING_BLOCK,
-        ]
+        statuses = ['AUTO', 'REVIEW', 'BLOCK']
         for index, status in enumerate(statuses):
             session = Session.objects.create(
+                session_id=f'synthetic-session-{index}',
                 member=cls.member,
-                date=timezone.now() - timezone.timedelta(days=2 - index),
+                session_date=timezone.localdate() - timezone.timedelta(days=2 - index),
                 exercise_name=f'synthetic squat pattern {index}',
-                sets=3,
-                reps_target=10,
-                reps_completed=8 + index,
+                planned_reps=10,
+                completed_reps=8 + index,
+                planned_rest_seconds=60,
+                actual_rest_seconds=55 + index,
                 rpe=6 + index,
                 pain_response=index,
-                trainer_notes='synthetic non-medical note',
+                trainer_memo='synthetic non-medical note',
+                route=status,
             )
             Indicator.objects.create(
                 session=session,
                 qs_score=92 - (index * 18),
-                form_accuracy=0.90 - (index * 0.10),
-                rep_rate=0.80 - (index * 0.05),
-                rest_compliance=0.85 - (index * 0.05),
-                pain_score=0.10 + (index * 0.30),
-                jatc_pain=0.20 + index,
-                jatc_posture=0.30 + index,
-                jatc_function=0.40 + index,
-                jatc_lifestyle=0.50 + index,
-                routing_status=status,
+                posture_score=90 - (index * 10),
+                rep_achievement_rate=80 - (index * 5),
+                rest_compliance=85 - (index * 5),
+                pain_score=10 + (index * 30),
+                review_signal=status,
             )
         User = get_user_model()
         cls.user = User.objects.create_user(
@@ -68,13 +63,15 @@ class DashboardPrivacyAndContextTests(TestCase):
         self.assertIn('recent_sessions', response.context)
         self.assertEqual(len(response.context['qs_labels']), 3)
         self.assertEqual(len(response.context['qs_scores']), 3)
-        self.assertEqual(len(response.context['breakdown_values']), 8)
+        self.assertEqual(len(response.context['breakdown_values']), 4)
         self.assertEqual(len(response.context['recent_sessions']), 3)
+        self.assertEqual(response.context['qs_scores'], [92, 74, 56])
+        self.assertEqual(response.context['breakdown_values'], [70, 70, 75, 70])
 
     def test_dashboard_renders_safety_copy_without_pii(self):
         response = self.client.get('/dashboard/', {'member_id': self.member.member_id})
         html = response.content.decode('utf-8')
-        self.assertContains(response, '진단·치료 목적이 아니라 PT 상담과 웰니스 피드백을 위한 프로토타입')
+        self.assertContains(response, '비의료 운동상담 참고 자료입니다. 최종 판단은 트레이너 검토가 필요합니다.')
         forbidden_context_keys = {'name', 'phone', 'email', 'address', 'birth_date', 'date_of_birth'}
         context_keys = set()
         for rendered_context in response.context:
@@ -93,4 +90,4 @@ class DashboardPrivacyAndContextTests(TestCase):
     def test_font_family_fallback_stack_exists_in_css(self):
         from pathlib import Path
         css_text = Path(__file__).resolve().parents[1].joinpath('static/lightone/css/lightone.css').read_text(encoding='utf-8')
-        self.assertIn('font-family: Inter, "Noto Sans KR", "Pretendard", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;', css_text)
+        self.assertIn('--font-dashboard:', css_text)

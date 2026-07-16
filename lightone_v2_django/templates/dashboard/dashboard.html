@@ -29,6 +29,29 @@
   </div>
 </section>
 
+<div class="notice" role="note">
+  <b>Safety Boundary</b>
+  {{ notice_text }}
+</div>
+
+<form method="get" class="member-selector" aria-label="회원 선택">
+  <label for="member-select">회원 선택</label>
+  <select id="member-select" name="member_id" onchange="this.form.submit()">
+    {% for member in members %}
+      <option value="{{ member.member_id }}"{% if member.member_id == selected_member_id %} selected{% endif %}>Member ID: {{ member.member_id }}</option>
+    {% empty %}
+      <option value="">저장된 회원 없음</option>
+    {% endfor %}
+  </select>
+  <noscript><button type="submit">조회</button></noscript>
+</form>
+
+<div class="status-badges" hidden>
+  <span class="badge-auto badge-green">AUTO</span>
+  <span class="badge-review badge-yellow">REVIEW</span>
+  <span class="badge-block badge-red">BLOCK</span>
+</div>
+
 <section id="progress" class="section-block">
   <div class="section-title">
     <span>QS</span>

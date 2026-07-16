@@ -100,7 +100,7 @@
       <li>
         <strong>{{ session.exercise_name }}</strong>
         <span>QS {{ session.indicator.qs_score }}</span>
-        <span>{{ session.indicator.routing_status }}</span>
+        <span class="routing-badge {{ session.routing_badge_class }}">{{ session.routing_label }}</span>
       </li>
       {% empty %}
       <li>선택 회원의 최근 세션이 없습니다.</li>
@@ -810,7 +810,7 @@
         <div class="lo-route-grid">
           <div class="lo-route-box auto"><span>AUTO</span><strong>{{ counts.AUTO }}</strong><small>초안 생성 가능</small></div>
           <div class="lo-route-box review"><span>REVIEW</span><strong>{{ counts.REVIEW }}</strong><small>검토 필요</small></div>
-          <div class="lo-route-box block"><span>BLOCK</span><strong>{{ counts.BLOCK }}</strong><small>진행 보류</small></div>
+          <div class="lo-route-box block"><span>BLOCK</span><strong>{{ counts.BLOCK }}</strong><small>트레이너 검토 전 자동 진행 제한</small></div>
         </div>
         <canvas id="routeChart" height="170"></canvas>
       </article>

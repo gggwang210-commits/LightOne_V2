@@ -79,9 +79,9 @@ class DashboardPrivacyAndContextTests(TestCase):
 
         User = get_user_model()
         cls.user = User.objects.create_user(
-            username='synthetic_trainer',
-            email='synthetic-trainer@example.test',
-            password='test-pass-1234',
+            username="synthetic_trainer",
+            email="synthetic-trainer@example.test",
+            password="test-pass-1234",
         )
 
     def setUp(self):

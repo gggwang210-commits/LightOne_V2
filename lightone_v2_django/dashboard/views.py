@@ -67,6 +67,6 @@ def _stored_member_context(selected_member_id):
 def dashboard(request):
     return render(
         request,
-        'dashboard/dashboard.html',
-        qs_dashboard_context(request.GET.get('member_id')),
+        "dashboard/dashboard.html",
+        dashboard_context(request.GET.get("member_id")),
     )

@@ -25,18 +25,18 @@
   <div class="two-col" aria-label="QS 대시보드 차트">
     <article class="panel-card">
       <div class="panel-head">
-        <h3>QS 점수 추이</h3>
-        <small>최근 세션 기준</small>
+        <h3>최근 QS 추이</h3>
+        <small>최근 세션 기준 운동 수행 품질 변화를 확인합니다.</small>
       </div>
       <canvas id="qsTrendChart" aria-label="QS 점수 추이 차트" role="img"></canvas>
     </article>
 
     <article class="panel-card">
       <div class="panel-head">
-        <h3>QS 구성 점수</h3>
-        <small>Form · Rep · Rest · Pain</small>
+        <h3>QS 구성요소 Breakdown</h3>
+        <small>Form, Rep, Rest, Pain 항목을 기준으로 세션 상태를 참고합니다.</small>
       </div>
-      <canvas id="qsBreakdownChart" aria-label="QS 구성 점수 차트" role="img"></canvas>
+      <canvas id="breakdownChart" aria-label="QS 구성요소 Breakdown bar chart" role="img"></canvas>
     </article>
   </div>
 
@@ -121,7 +121,7 @@
     }
 
     const qsTrendCanvas = document.getElementById('qsTrendChart');
-    const qsBreakdownCanvas = document.getElementById('qsBreakdownChart');
+    const breakdownCanvas = document.getElementById('breakdownChart');
 
     if (qsTrendCanvas) {
       new Chart(qsTrendCanvas, {
@@ -143,8 +143,8 @@
       });
     }
 
-    if (qsBreakdownCanvas) {
-      new Chart(qsBreakdownCanvas, {
+    if (breakdownCanvas) {
+      new Chart(breakdownCanvas, {
         type: 'bar',
         data: {
           labels: breakdownLabels,

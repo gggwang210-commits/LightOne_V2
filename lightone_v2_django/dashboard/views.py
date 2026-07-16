@@ -1,7 +1,6 @@
 from django.shortcuts import render
 
-from lightone.models import Member, Session
-from lightone.services import dashboard_context
+from lightone.services import qs_dashboard_context
 
 
 NOTICE_TEXT = '비의료 운동상담 참고 자료입니다. 최종 판단은 트레이너 검토가 필요합니다.'
@@ -66,7 +65,8 @@ def _stored_member_context(selected_member_id):
 
 
 def dashboard(request):
-    selected_member_id = request.GET.get('member_id')
-    context = dashboard_context(selected_member_id)
-    context.update(_stored_member_context(selected_member_id))
-    return render(request, 'dashboard/dashboard.html', context)
+    return render(
+        request,
+        'dashboard/dashboard.html',
+        qs_dashboard_context(request.GET.get('member_id')),
+    )

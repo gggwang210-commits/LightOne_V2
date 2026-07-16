@@ -11,8 +11,20 @@
 
   <div class="notice" role="note">
     <b>Safety Boundary</b>
-    이 대시보드는 PT 상담 참고용이며 의료적 진단이나 치료 판단을 대체하지 않습니다.
+    {{ notice_text }}
   </div>
+
+  <form method="get" class="member-selector" aria-label="회원 선택">
+    <label for="member-select">회원 선택</label>
+    <select id="member-select" name="member_id" onchange="this.form.submit()">
+      {% for member in members %}
+        <option value="{{ member.member_id }}"{% if member.member_id == selected_member_id %} selected{% endif %}>Member ID: {{ member.member_id }}</option>
+      {% empty %}
+        <option value="">저장된 회원 없음</option>
+      {% endfor %}
+    </select>
+    <noscript><button type="submit">조회</button></noscript>
+  </form>
 
   <div class="two-col" aria-label="QS dashboard charts">
     <article class="panel-card">

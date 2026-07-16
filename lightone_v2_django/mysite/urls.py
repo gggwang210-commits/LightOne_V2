@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import include, path
 from django.shortcuts import redirect
-from lightone.views import dashboard
+from dashboard.views import dashboard
 
 urlpatterns = [
     path('', lambda request: redirect('lightone:dashboard')),

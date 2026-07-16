@@ -48,10 +48,7 @@ class MemberSession(models.Model):
     lifestyle_score = models.FloatField(default=0)
     function_training_score = models.FloatField(default=0)
     qs_score = models.FloatField(default=0)
-    jatc_score = models.FloatField(
-        default=0,
-        help_text='비의료 운동상담 참고용 JATC 점수입니다.',
-    )
+    jatc_score = models.FloatField(default=0)
     form_accuracy = models.FloatField(default=0)
     pain_response = models.FloatField(default=0)
     rpe = models.FloatField(default=0)

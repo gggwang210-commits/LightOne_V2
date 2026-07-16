@@ -22,6 +22,7 @@
       <span class="{{ status_badges.AUTO }}">AUTO</span>
       <span class="{{ status_badges.REVIEW }}">REVIEW</span>
       <span class="{{ status_badges.BLOCK }}">BLOCK</span>
+      <span class="badge-unknown badge-gray">UNKNOWN</span>
     </div>
     <ul class="recent-sessions">
       {% for session in recent_sessions %}
@@ -99,7 +100,7 @@
                 {% elif row.routing_status == 'BLOCK' %}
                   <span class="badge-block badge-red">{{ row.routing_status }}</span>
                 {% else %}
-                  <span>{{ row.routing_status }}</span>
+                  <span class="badge-unknown badge-gray">{{ row.routing_status }}</span>
                 {% endif %}
               </td>
             </tr>

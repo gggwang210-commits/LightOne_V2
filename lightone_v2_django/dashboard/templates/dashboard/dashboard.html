@@ -1,36 +1,117 @@
 {% extends "base.html" %}
 
-{% block title %}LIGHT ONE QS Dashboard{% endblock %}
+{% block title %}QS 대시보드 | LIGHT ONE{% endblock %}
 
 {% block content %}
 <section class="section-block" aria-labelledby="qs-dashboard-title">
   <div class="section-title">
     <span>QS</span>
-    <h2 id="qs-dashboard-title">Quality Score Dashboard</h2>
+    <h2 id="qs-dashboard-title">QS 대시보드</h2>
+    <p>회원별 운동 수행 품질 추이와 세션 라우팅 상태를 확인합니다.</p>
   </div>
 
   <div class="notice" role="note">
     <b>Safety Boundary</b>
-    이 대시보드는 PT 상담 참고용이며 의료적 진단이나 치료 판단을 대체하지 않습니다.
+    비의료 운동상담 참고 자료입니다. 최종 판단은 트레이너 검토가 필요합니다.
   </div>
 
-  <div class="two-col" aria-label="QS dashboard charts">
+
+  <div class="member-dashboard" data-selected-member-id="{{ selected_member_id|default:'' }}" style='font-family: "Pretendard", "SUIT", "Noto Sans KR", "Malgun Gothic", system-ui, sans-serif;'>
+    <p class="muted">선택 회원 기준 비의료 운동 지도 보조 데이터입니다.</p>
+    <div class="status-badges" aria-label="routing status badges">
+      <span class="{{ status_badges.AUTO }}">AUTO</span>
+      <span class="{{ status_badges.REVIEW }}">REVIEW</span>
+      <span class="{{ status_badges.BLOCK }}">BLOCK</span>
+    </div>
+    <ul class="recent-sessions">
+      {% for session in recent_sessions %}
+      <li>
+        <strong>{{ session.exercise_name }}</strong>
+        <span>QS {{ session.indicator.qs_score }}</span>
+        <span>{{ session.indicator.review_signal }}</span>
+      </li>
+      {% empty %}
+      <li>선택 회원의 최근 세션이 없습니다.</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <article class="panel-card" aria-label="회원 선택">
+    <div class="panel-head">
+      <h3>회원 선택</h3>
+      <small>Member ID: {{ member_id }}</small>
+    </div>
+  </article>
+
+  <div class="two-col" aria-label="QS 대시보드 차트">
     <article class="panel-card">
       <div class="panel-head">
-        <h3>recent QS trend</h3>
-        <small>최근 세션별 QS 변화</small>
+        <h3>최근 QS 추이</h3>
+        <small>최근 세션 기준 운동 수행 품질 변화를 확인합니다.</small>
       </div>
-      <canvas id="qsTrendChart" aria-label="recent QS trend line chart" role="img"></canvas>
+      <canvas id="qsTrendChart" aria-label="QS 점수 추이 차트" role="img"></canvas>
     </article>
 
     <article class="panel-card">
       <div class="panel-head">
-        <h3>QS Breakdown</h3>
-        <small>주요 구성요소별 점수</small>
+        <h3>QS 구성요소 Breakdown</h3>
+        <small>Form, Rep, Rest, Pain 항목을 기준으로 세션 상태를 참고합니다.</small>
       </div>
-      <canvas id="qsBreakdownChart" aria-label="QS Breakdown bar chart" role="img"></canvas>
+      <canvas id="breakdownChart" aria-label="QS 구성요소 Breakdown bar chart" role="img"></canvas>
     </article>
   </div>
+
+  <article class="panel-card" aria-label="세션별 QS 목록">
+    <div class="panel-head">
+      <h3>세션 라우팅 상태</h3>
+      <small>비의료 운동상담 참고 자료입니다. 최종 판단은 트레이너 검토가 필요합니다.</small>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>세션 날짜</th>
+            <th>member_id</th>
+            <th>QS 점수</th>
+            <th>Form</th>
+            <th>Rep</th>
+            <th>Rest</th>
+            <th>Pain</th>
+            <th>라우팅 상태</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in dashboard_rows %}
+            <tr>
+              <td>{{ row.session_date|date:"Y-m-d" }}</td>
+              <td>{{ row.member_id }}</td>
+              <td>{{ row.qs_score|floatformat:1 }}</td>
+              <td>{{ row.form|floatformat:1 }}</td>
+              <td>{{ row.rep|floatformat:1 }}</td>
+              <td>{{ row.rest|floatformat:1 }}</td>
+              <td>{{ row.pain|floatformat:1 }}</td>
+              <td>
+                {% if row.routing_status == 'AUTO' %}
+                  <span class="badge-auto badge-green">{{ row.routing_status }}</span>
+                {% elif row.routing_status == 'REVIEW' %}
+                  <span class="badge-review badge-yellow">{{ row.routing_status }}</span>
+                {% elif row.routing_status == 'BLOCK' %}
+                  <span class="badge-block badge-red">{{ row.routing_status }}</span>
+                {% else %}
+                  <span>{{ row.routing_status }}</span>
+                {% endif %}
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="8">표시할 QS 세션 데이터가 없습니다.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </article>
 </section>
 
 {{ qs_labels|json_script:"qs-labels-data" }}
@@ -48,10 +129,7 @@
   window.addEventListener('DOMContentLoaded', function () {
     const parseJsonScript = function (elementId) {
       const element = document.getElementById(elementId);
-      if (!element) {
-        return [];
-      }
-      return JSON.parse(element.textContent);
+      return element ? JSON.parse(element.textContent) : [];
     };
 
     const qsLabels = parseJsonScript('qs-labels-data');
@@ -64,7 +142,7 @@
     }
 
     const qsTrendCanvas = document.getElementById('qsTrendChart');
-    const qsBreakdownCanvas = document.getElementById('qsBreakdownChart');
+    const breakdownCanvas = document.getElementById('breakdownChart');
 
     if (qsTrendCanvas) {
       new Chart(qsTrendCanvas, {
@@ -72,7 +150,7 @@
         data: {
           labels: qsLabels,
           datasets: [{
-            label: 'QS Score',
+            label: 'QS 점수',
             data: qsScores,
             borderColor: '#1f7a5c',
             backgroundColor: 'rgba(31, 122, 92, 0.14)',
@@ -82,39 +160,23 @@
             fill: true
           }]
         },
-        options: {
-          responsive: true,
-          scales: {
-            y: {
-              beginAtZero: true,
-              suggestedMax: 100
-            }
-          }
-        }
+        options: { responsive: true, scales: { y: { beginAtZero: true, suggestedMax: 100 } } }
       });
     }
 
-    if (qsBreakdownCanvas) {
-      new Chart(qsBreakdownCanvas, {
+    if (breakdownCanvas) {
+      new Chart(breakdownCanvas, {
         type: 'bar',
         data: {
           labels: breakdownLabels,
           datasets: [{
-            label: 'Score',
+            label: '구성 점수',
             data: breakdownValues,
             backgroundColor: ['#1f7a5c', '#f0a202', '#2563eb', '#dc2626'],
             borderRadius: 8
           }]
         },
-        options: {
-          responsive: true,
-          scales: {
-            y: {
-              beginAtZero: true,
-              suggestedMax: 100
-            }
-          }
-        }
+        options: { responsive: true, scales: { y: { beginAtZero: true, suggestedMax: 100 } } }
       });
     }
   });

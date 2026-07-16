@@ -1,3 +1,5 @@
+from django.db import models
+
 from .models import Indicator, Member, MemberSession, StrategyItem
 
 
@@ -113,3 +115,100 @@ def dashboard_context(member_id=None):
     }
     context.update(_member_dashboard_context(member_id))
     return context
+
+
+def _routing_badges():
+    return {
+        'AUTO': 'badge-auto badge-green',
+        'REVIEW': 'badge-review badge-yellow',
+        'BLOCK': 'badge-block badge-red',
+    }
+
+
+def _indicator_session_date(indicator):
+    if indicator.session_id and indicator.session:
+        return indicator.session.session_date
+    if indicator.member_session_id and indicator.member_session:
+        return indicator.member_session.created_at.date()
+    return indicator.created_at.date()
+
+
+def _indicator_member_id(indicator):
+    if indicator.session_id and indicator.session and indicator.session.member_id:
+        return str(indicator.session.member.member_id)
+    if (
+        indicator.member_session_id
+        and indicator.member_session
+        and indicator.member_session.member_id
+    ):
+        return str(indicator.member_session.member.member_id)
+    return ''
+
+
+def _indicator_form_score(indicator):
+    if indicator.member_session_id and indicator.member_session:
+        return indicator.member_session.form_accuracy
+    return indicator.posture_score
+
+
+def _indicator_rep_score(indicator):
+    if indicator.member_session_id and indicator.member_session:
+        return indicator.member_session.rep_score
+    return indicator.rep_achievement_rate
+
+
+def _indicator_rest_score(indicator):
+    if indicator.member_session_id and indicator.member_session:
+        return indicator.member_session.rest_score
+    return indicator.rest_compliance
+
+
+def _indicator_route(indicator):
+    return indicator.review_signal or indicator.route
+
+
+def qs_dashboard_context(member_id=None):
+    """Return only non-identifying QS dashboard data for dashboard app."""
+    indicators = Indicator.objects.select_related(
+        'session__member',
+        'member_session__member',
+    ).order_by('-created_at', '-qs_score')
+
+    if member_id:
+        indicators = indicators.filter(
+            models.Q(session__member__member_id=member_id)
+            | models.Q(member_session__member__member_id=member_id)
+        )
+
+    rows = []
+    for indicator in indicators[:20]:
+        row_member_id = _indicator_member_id(indicator)
+        rows.append({
+            'session_date': _indicator_session_date(indicator),
+            'member_id': row_member_id,
+            'qs_score': indicator.qs_score,
+            'form': _indicator_form_score(indicator),
+            'rep': _indicator_rep_score(indicator),
+            'rest': _indicator_rest_score(indicator),
+            'pain': indicator.pain_score,
+            'routing_status': _indicator_route(indicator),
+        })
+
+    chronological_rows = list(reversed(rows[:8]))
+    selected_member_id = member_id or (rows[0]['member_id'] if rows else '')
+
+    return {
+        'member_id': str(selected_member_id),
+        'qs_labels': [row['session_date'].strftime('%m/%d') for row in chronological_rows],
+        'qs_scores': [row['qs_score'] for row in chronological_rows],
+        'breakdown_labels': ['Form', 'Rep', 'Rest', 'Pain'],
+        'breakdown_values': [
+            rows[0]['form'] if rows else 0,
+            rows[0]['rep'] if rows else 0,
+            rows[0]['rest'] if rows else 0,
+            rows[0]['pain'] if rows else 0,
+        ],
+        'dashboard_rows': rows,
+        'status_badges': _routing_badges(),
+        'safety_notice': '비의료 운동상담 참고 자료입니다. 최종 판단은 트레이너 검토가 필요합니다.',
+    }

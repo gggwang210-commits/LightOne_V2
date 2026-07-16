@@ -26,7 +26,7 @@ def _member_dashboard_context(member_id=None):
         return _empty_member_dashboard()
 
     recent_sessions = list(
-        member.sessions.select_related('indicator').order_by('-date', 'exercise_name')[:5]
+        member.session_records.select_related('indicator').order_by('-session_date', 'exercise_name')[:5]
     )
     chronological_sessions = list(reversed(recent_sessions))
     indicators = [getattr(session, 'indicator', None) for session in chronological_sessions]
@@ -36,20 +36,20 @@ def _member_dashboard_context(member_id=None):
     breakdown_values = []
     if latest_indicator:
         breakdown_values = [
-            latest_indicator.form_accuracy,
-            latest_indicator.rep_rate,
+            latest_indicator.posture_score,
+            latest_indicator.rep_achievement_rate,
             latest_indicator.rest_compliance,
             latest_indicator.pain_score,
-            latest_indicator.jatc_pain,
-            latest_indicator.jatc_posture,
-            latest_indicator.jatc_function,
-            latest_indicator.jatc_lifestyle,
+            latest_indicator.jatc_score,
+            latest_indicator.posture_score,
+            latest_indicator.function_training_score,
+            latest_indicator.lifestyle_score,
         ]
 
     return {
         'selected_member_id': str(member.member_id),
-        'qs_labels': [session.date.strftime('%m/%d') for session in chronological_sessions],
-        'qs_scores': [indicator.qs_score for indicator in indicators],
+        'qs_labels': [session.session_date.strftime('%m/%d') for session in chronological_sessions],
+        'qs_scores': [getattr(session, 'indicator').qs_score for session in chronological_sessions if hasattr(session, 'indicator')],
         'breakdown_values': breakdown_values,
         'recent_sessions': recent_sessions,
         'status_badges': {
@@ -74,7 +74,7 @@ def dashboard_context(member_id=None):
     qc_counts = {key: sum(1 for s in sessions if s.qc_status == key) for key in ['PASS', 'CHECK', 'FAIL']}
 
     indicator_counts = {
-        key: Indicator.objects.filter(routing_status=key).count()
+        key: Indicator.objects.filter(review_signal=key).count()
         for key in ['AUTO', 'REVIEW', 'BLOCK']
     }
     for key, value in indicator_counts.items():
@@ -91,7 +91,7 @@ def dashboard_context(member_id=None):
         {'name': '생활습관', 'value': 0.06},
     ]
 
-    qs_labels = [session.date.strftime('%m/%d') for session in sessions]
+    qs_labels = [session.created_at.strftime('%m/%d') for session in sessions]
     qs_scores = [session.qs_score for session in sessions]
     breakdown_labels = ['통증 반응', '폼 정확도', 'RPE', '촬영 QC', 'JATC', '생활습관']
     breakdown_values = [0.28, 0.25, 0.18, 0.13, 0.10, 0.06]

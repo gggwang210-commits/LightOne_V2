@@ -11,7 +11,28 @@
 
   <div class="notice" role="note">
     <b>Safety Boundary</b>
-    이 대시보드는 PT 상담 참고용이며 의료적 진단이나 치료 판단을 대체하지 않습니다.
+    비의료 운동상담 참고 자료입니다. 최종 판단은 트레이너 검토가 필요합니다.
+  </div>
+
+
+  <div class="member-dashboard" data-selected-member-id="{{ selected_member_id|default:'' }}" style='font-family: "Pretendard", "SUIT", "Noto Sans KR", "Malgun Gothic", system-ui, sans-serif;'>
+    <p class="muted">선택 회원 기준 비의료 운동 지도 보조 데이터입니다.</p>
+    <div class="status-badges" aria-label="routing status badges">
+      <span class="{{ status_badges.AUTO }}">AUTO</span>
+      <span class="{{ status_badges.REVIEW }}">REVIEW</span>
+      <span class="{{ status_badges.BLOCK }}">BLOCK</span>
+    </div>
+    <ul class="recent-sessions">
+      {% for session in recent_sessions %}
+      <li>
+        <strong>{{ session.exercise_name }}</strong>
+        <span>QS {{ session.indicator.qs_score }}</span>
+        <span>{{ session.indicator.review_signal }}</span>
+      </li>
+      {% empty %}
+      <li>선택 회원의 최근 세션이 없습니다.</li>
+      {% endfor %}
+    </ul>
   </div>
 
   <div class="two-col" aria-label="QS dashboard charts">

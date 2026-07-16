@@ -1,11 +1,9 @@
 from django.contrib import admin
-from django.urls import include, path
 from django.shortcuts import redirect
-from dashboard.views import dashboard
+from django.urls import include, path
 
 urlpatterns = [
     path('', lambda request: redirect('lightone:dashboard')),
-    path('dashboard/', dashboard, name='dashboard'),
     path('admin/', admin.site.urls),
     path('lightone/', include('lightone.urls')),
     path('dashboard/', include('dashboard.urls')),

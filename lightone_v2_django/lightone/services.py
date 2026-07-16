@@ -3,6 +3,39 @@ from django.db import models
 from .models import Indicator, Member, MemberSession, StrategyItem
 
 
+ROUTING_CLASS_MAP = {
+    'AUTO': 'badge-green',
+    'GREEN': 'badge-green',
+    'REVIEW': 'badge-yellow',
+    'YELLOW': 'badge-yellow',
+    'BLOCK': 'badge-red',
+    'RED': 'badge-red',
+}
+
+
+def routing_status_value(session):
+    indicator = getattr(session, 'indicator', None)
+    return getattr(indicator, 'routing_status', None) or getattr(session, 'route', '') or ''
+
+
+def routing_label(status):
+    return str(status or 'UNKNOWN')
+
+
+def routing_badge_class(status):
+    normalized_status = str(status or '').upper()
+    return ROUTING_CLASS_MAP.get(normalized_status, 'badge-gray')
+
+
+def apply_routing_badges(sessions):
+    for session in sessions:
+        status = routing_status_value(session)
+        session.routing_status = status
+        session.routing_badge_class = routing_badge_class(status)
+        session.routing_label = routing_label(status)
+    return sessions
+
+
 def _empty_member_dashboard():
     return {
         "selected_member_id": None,
@@ -69,7 +102,7 @@ def _member_dashboard_context(member_id=None):
 
 
 def dashboard_context(member_id=None):
-    sessions = list(MemberSession.objects.all())
+    sessions = apply_routing_badges(list(MemberSession.objects.all()))
     total = len(sessions)
     if total:
         avg_qs = round(sum(s.qs_score for s in sessions) / total, 1)
